@@ -26,7 +26,7 @@ export function Nav() {
             <Link href="#services" className="hover:text-primary">Services</Link>
             <Link href="#ministries-and-fellowships" className="hover:text-primary">Ministries & Fellowships</Link>
             <Link href="#events" className="hover:text-primary">Events</Link>
-            <Button>Plan Your Visit</Button>
+            <Button><Link href={'/dashboard'}>Sign in</Link></Button>
           </div>
 
           <button 
@@ -60,7 +60,7 @@ export function Nav() {
               Events
             </Link>
             <div className="px-3 py-2">
-              <Button className="w-full">Plan Your Visit</Button>
+              <Button className="w-full"><Link href={'/dashboard'}>Sign in</Link></Button>
             </div>
           </div>
         </motion.div>

@@ -1,9 +1,9 @@
-import { About } from "@/components/about";
-import { Events } from "@/components/events";
-import { Hero } from "@/components/hero";
-import { MinistriesAndFellowships } from "@/components/ministries-and-fellowships";
-import { Nav } from "@/components/nav";
-import { ServiceTimes } from "@/components/services";
+import { About } from "@/components/splash/about";
+import { Events } from "@/components/splash/events";
+import { Hero } from "@/components/splash/hero";
+import { MinistriesAndFellowships } from "@/components/splash/ministries-and-fellowships";
+import { Nav } from "@/components/splash/nav";
+import { ServiceTimes } from "@/components/splash/services";
 
 export default function Home() {
   return (
