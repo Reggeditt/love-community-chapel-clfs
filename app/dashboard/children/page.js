@@ -205,7 +205,7 @@ const Children = () => {
     <>
       <Divider />
       <Space className='px-4' size='middle'>
-        <Button><Link href={'/dashboard/members/new'}>Add New Child</Link></Button>
+        <Button><Link href={'/dashboard/children/new'}>Add New Child</Link></Button>
       </Space>
       <Divider />
       <Table columns={columns} dataSource={tableData} onChange={onChange} scroll={{x:true}}/>

@@ -137,4 +137,4 @@ const AddNewChild = () => {
   )
 }
 
-export default AddNewMember
+export default AddNewChild
