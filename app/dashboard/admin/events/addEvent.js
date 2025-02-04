@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import { Button, DatePicker, Form, Input, Select } from 'antd';
+import { Button, DatePicker, Form, Input, Select, TimePicker } from 'antd';
 import { useData } from '../../dataFactory';
 
 const layout = {
@@ -13,9 +13,9 @@ const layout = {
   },
 };
 
-const AddNewAttendance = () => {
-  const { setAttendanceDatabase, attendanceDatabase, eventsDatabase } = useData();
-
+const AddEvent = () => {
+  const { setEventsDatabase, eventsDatabase, eventCategoriesDatabase } = useData();
+  
   const validateMessages = {
     required: '${label} is required!',
     types: {
@@ -28,13 +28,16 @@ const AddNewAttendance = () => {
   };
 
   const onFinish = (values) => {
-    const newAttendanceRecord = {
-      id: attendanceDatabase.length + 1,
-      ...values,
-      eventDate: values.eventDate.toISOString(),
-      numberInAttendance: 0,
+    const newEvent = {
+      id: eventsDatabase.length + 1,
+      ...values
     };
-    setAttendanceDatabase([...attendanceDatabase, newAttendanceRecord]);
+
+    const isDuplicate = eventsDatabase.some(event => event.name === newEvent.name && event.date === newEvent.date);
+
+    if (!isDuplicate) {
+      setEventsDatabase([...eventsDatabase, newEvent]);
+    }
   };
 
   return (
@@ -44,37 +47,46 @@ const AddNewAttendance = () => {
         name="nest-messages"
         onFinish={onFinish}
         style={{
-          maxWidth: 600,
-          width: '100%',
+          maxWidth: 1000,
+          width: 1000
         }}
         validateMessages={validateMessages}
       >
         <Form.Item
-          name={'eventID'}
-          label="Select Event"
+          name={'eventCategoryId'}
+          label="Select Event Category"
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Select options={eventsDatabase.map(event => ({
-            label: event.name,
-            value: event.id
+          <Select options={eventCategoriesDatabase.map(category => ({
+            label: category.name,
+            value: category.id
           }))} />
         </Form.Item>
         <Form.Item
-          name={'eventDate'}
-          label="Event Date"
+          name={'eventName'}
+          label="Event Name"
           rules={[
             {
               required: true,
             },
           ]}
         >
+          <Input />
+        </Form.Item>
+        <Form.Item name={'eventDate'} label="Event Date">
           <DatePicker />
         </Form.Item>
-        <Form.Item name={'description'} label="Description">
+        <Form.Item name={'eventStartTime'} label="Start Time">
+          <TimePicker />
+        </Form.Item>
+        <Form.Item name={'eventEndTime'} label="End Time">
+          <TimePicker />
+        </Form.Item>
+        <Form.Item name={'description'} label={"Description"}>
           <Input.TextArea />
         </Form.Item>
         <Form.Item label={null}>
@@ -87,4 +99,4 @@ const AddNewAttendance = () => {
   )
 }
 
-export default AddNewAttendance
+export default AddEvent

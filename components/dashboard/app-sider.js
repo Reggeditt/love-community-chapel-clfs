@@ -15,9 +15,9 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Canaan Land Faith Sanctuary",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: "Maura",
     },
     {
       name: "Acme Corp.",
@@ -108,7 +108,7 @@ const data = {
       items: [
         {
           title: "Events",
-          url: "dashboard/events",
+          url: "dashboard/admin/events",
         },
         {
           title: "Groups",
