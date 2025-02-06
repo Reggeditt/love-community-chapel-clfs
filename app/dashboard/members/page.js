@@ -5,7 +5,8 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useData } from '../dataFactory'
 import { Divider, Space, Table } from 'antd';
-
+import { FloatButton } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 
 const Members = () => {
   const [tableData, setTableData] = useState(null)
@@ -101,7 +102,7 @@ const Members = () => {
     },
     {
       title: 'Occupation',
-      dataIndex: 'Occupation',
+      dataIndex: 'occupation',
       filters: [
         {
           text: 'Joe',
@@ -203,12 +204,28 @@ const Members = () => {
   },[membersDatabase])
   return (
     <>
-      <Divider />
-      <Space className='px-4' size='middle'>
-        <Button><Link href={'/dashboard/members/new'}>AddNewMember</Link></Button>
-      </Space>
-      <Divider />
-      <Table columns={columns} dataSource={tableData} onChange={onChange} scroll={{x:true}}/>
+      <Table 
+        columns={columns} 
+        dataSource={tableData} 
+        onChange={onChange} 
+        scroll={{ x: true }} 
+        pagination={{ responsive: true }}
+      />
+      <FloatButton.Group 
+        shape="circle" 
+        style={{ right: 24, bottom: 24 }} 
+        className="float-button-group"
+      >
+        <FloatButton icon={<PlusOutlined />} tooltip="Add New Member" href="/dashboard/members/new" />
+      </FloatButton.Group>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .float-button-group {
+            right: 16px;
+            bottom: 16px;
+          }
+        }
+      `}</style>
     </>
   )
 }

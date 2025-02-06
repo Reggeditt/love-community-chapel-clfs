@@ -6,10 +6,12 @@ import { useData } from '../../dataFactory';
 
 const layout = {
   labelCol: {
-    span: 8,
+    xs: { span: 24 },
+    sm: { span: 8 },
   },
   wrapperCol: {
-    span: 16,
+    xs: { span: 24 },
+    sm: { span: 16 },
   },
 };
 
@@ -41,14 +43,14 @@ const AddEvent = () => {
   };
 
   return (
-    <div className='flex justify-center items-center h-full w-full'>
+    <div className='flex justify-center items-center h-full w-full p-4'>
       <Form
         {...layout}
         name="nest-messages"
         onFinish={onFinish}
         style={{
-          maxWidth: 1000,
-          width: 1000
+          maxWidth: 600,
+          width: '100%',
         }}
         validateMessages={validateMessages}
       >

@@ -5,24 +5,24 @@ const dataFactory = createContext()
 
 const DataProvider = ({children}) => {
   const [membersDatabase, setMembersDatabase] = useState([
-    { id: 'm1', name: 'John Doe', email: 'john@example.com' },
-    { id: 'm2', name: 'Jane Smith', email: 'jane@example.com' },
+    { id: 'm1', lastName: 'Doe', occupation: 'artisan', dob: '1994-01-01', firstName: 'John', email: 'john@example.com', residentialArea: 'patasi', address: 'AK-052-223232', age: 30, contact: '+233222222222' },
+    { id: 'm2', lastName: 'Smith', occupation: 'artisan', dob: '1994-01-01', firstName: 'Jane', email: 'jane@example.com', residentialArea: 'patasi', address: 'AK-052-223232', age: 30, contact: '+233222222222' },
   ])
   const [visitorsDatabase, setVisitorsDatabase] = useState([
-    { id: 'v1', name: 'Visitor One', email: 'visitor1@example.com' },
-    { id: 'v2', name: 'Visitor Two', email: 'visitor2@example.com' },
+    { id: 'v1', lastName: 'Visitor', occupation: 'artisan', firstName: 'One', residentialArea: 'patasi', age: 27, contact: '++233222222222' },
+    { id: 'v2', lastName: 'Visitor', occupation: 'artisan', firstName: 'Two', residentialArea: 'patasi', age: 30, contact: '+233111111111' },
   ])
   const [childrensDatabase, setChildrensDatabase] = useState([
-    { id: 'c1', name: 'Child One', age: 10 },
-    { id: 'c2', name: 'Child Two', age: 8 },
+    { id: 'c1', lastName: 'Child', occupation: 'student', dob: '2013-01-01', firstName: 'One', age: 10 },
+    { id: 'c2', lastName: 'Child', occupation: 'student', dob: '2015-01-01', firstName: 'Two', age: 8 },
   ])
   const [staffDatabase, setStaffDatabase] = useState([
-    { id: 's1', name: 'Staff One', position: 'Manager' },
-    { id: 's2', name: 'Staff Two', position: 'Assistant' },
+    { id: 's1', lastName: 'Staff', occupation: 'Manager', dob: '1980-01-01', firstName: 'One', position: 'Manager' },
+    { id: 's2', lastName: 'Staff', occupation: 'Assistant', dob: '1985-01-01', firstName: 'Two', position: 'Assistant' },
   ])
   const [youthsDatabase, setYouthsDatabase] = useState([
-    { id: 'y1', name: 'Youth One', age: 18 },
-    { id: 'y2', name: 'Youth Two', age: 20 },
+    { id: 'y1', lastName: 'Youth', occupation: 'student', dob: '2005-01-01', firstName: 'One', age: 18 },
+    { id: 'y2', lastName: 'Youth', occupation: 'student', dob: '2003-01-01', firstName: 'Two', age: 20 },
   ])
   const [eventsDatabase, setEventsDatabase] = useState([
     { id: 'e1', name: 'Event 1', date: '2023-10-01', categoryID: 'ec1' },
