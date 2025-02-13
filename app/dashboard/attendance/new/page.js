@@ -3,6 +3,7 @@
 import React from 'react';
 import { Button, DatePicker, Form, Input, Select } from 'antd';
 import { useData } from '../../dataFactory';
+import { useRouter } from 'next/navigation';
 
 const layout = {
   labelCol: {
@@ -15,6 +16,7 @@ const layout = {
 
 const AddNewAttendance = () => {
   const { setAttendanceDatabase, attendanceDatabase, eventsDatabase } = useData();
+  const router = useRouter()
 
   const validateMessages = {
     required: '${label} is required!',
@@ -35,6 +37,7 @@ const AddNewAttendance = () => {
       numberInAttendance: 0,
     };
     setAttendanceDatabase([...attendanceDatabase, newAttendanceRecord]);
+    router.push('/dashboard/attendance')
   };
 
   return (
@@ -64,7 +67,7 @@ const AddNewAttendance = () => {
           }))} />
         </Form.Item>
         <Form.Item
-          name={'eventDate'}
+          name={'date'}
           label="Event Date"
           rules={[
             {

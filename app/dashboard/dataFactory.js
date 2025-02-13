@@ -25,9 +25,9 @@ const DataProvider = ({children}) => {
     { id: 'y2', lastName: 'Youth', occupation: 'student', dob: '2003-01-01', firstName: 'Two', age: 20 },
   ])
   const [eventsDatabase, setEventsDatabase] = useState([
-    { id: 'e1', name: 'Event 1', date: '2023-10-01', categoryID: 'ec1' },
-    { id: 'e2', name: 'Event 2', date: '2023-10-05', categoryID: 'ec2' },
-    { id: 'e3', name: 'Event 3', date: '2023-10-10', categoryID: 'ec3' },
+    { id: 'e1', name: 'Event 1', startTime: '7:00AM', endTime: '9:00AM', categoryID: 'ec1' },
+    { id: 'e2', name: 'Event 2', startTime: '7:00AM', endTime: '9:00AM', categoryID: 'ec2' },
+    { id: 'e3', name: 'Event 3', startTime: '7:00AM', endTime: '9:00AM', categoryID: 'ec3' },
   ])
   const [eventCategoriesDatabase, setEventCategoriesDatabase] = useState([
     { id: 'ec1', name: 'Category A', description: 'A category called A' },
@@ -43,8 +43,8 @@ const DataProvider = ({children}) => {
     { id: 'f2', amount: 2000, date: '2023-02-01' },
   ])
   const [attendanceDatabase, setAttendanceDatabase] = useState([
-    { id: 'a1', eventID: 'e1', attendees: ['m1', 'm2'] },
-    { id: 'a2', eventID: 'e2', attendees: ['m2', 'v2'] },
+    { id: 'a1', eventID: 'e1', date: '2023-01-01', attendees: ['m1', 'm2'] },
+    { id: 'a2', eventID: 'e2', date: '2023-01-01', attendees: ['m2', 'v2'] },
   ])
   const [assetsDatabase, setAssetsDatabase] = useState([
     { id: 'as1', name: 'Asset One', value: 1000 },

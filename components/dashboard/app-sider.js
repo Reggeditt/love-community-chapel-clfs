@@ -108,7 +108,7 @@ const data = {
       items: [
         {
           title: "Events",
-          url: "dashboard/admin/events",
+          url: "/dashboard/admin/events",
         },
         {
           title: "Groups",

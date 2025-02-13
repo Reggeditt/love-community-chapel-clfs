@@ -55,7 +55,7 @@ const AddEvent = () => {
         validateMessages={validateMessages}
       >
         <Form.Item
-          name={'eventCategoryId'}
+          name={'categoryID'}
           label="Select Event Category"
           rules={[
             {
@@ -69,7 +69,7 @@ const AddEvent = () => {
           }))} />
         </Form.Item>
         <Form.Item
-          name={'eventName'}
+          name={'name'}
           label="Event Name"
           rules={[
             {
@@ -79,13 +79,10 @@ const AddEvent = () => {
         >
           <Input />
         </Form.Item>
-        <Form.Item name={'eventDate'} label="Event Date">
-          <DatePicker />
-        </Form.Item>
-        <Form.Item name={'eventStartTime'} label="Start Time">
+        <Form.Item name={'startTime'} label="Start Time">
           <TimePicker />
         </Form.Item>
-        <Form.Item name={'eventEndTime'} label="End Time">
+        <Form.Item name={'endTime'} label="End Time">
           <TimePicker />
         </Form.Item>
         <Form.Item name={'description'} label={"Description"}>
@@ -99,6 +96,6 @@ const AddEvent = () => {
       </Form>
     </div>
   )
-}
+} 
 
 export default AddEvent

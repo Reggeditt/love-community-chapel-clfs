@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { Avatar, List, Skeleton } from 'antd';
+import { Avatar, List, Skeleton, message } from 'antd';
 import { Button, Divider, Form, Modal, Space, DatePicker, Select, Input, AutoComplete } from 'antd'
 import Link from 'next/link'
 import { useData } from '../../dataFactory'
@@ -12,7 +12,7 @@ import { FloatButton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 const eventsPage = () => {
-  const { eventsDatabase, eventCategoriesDatabase } = useData();
+  const { eventsDatabase, eventCategoriesDatabase, setEventsDatabase } = useData();
   const [eventsList, setEventsList] = useState([]);
   const [filteredEventsList, setFilteredEventsList] = useState([]);
   const [openEventCategoryModal, setOpenEventCategoryModal] = useState(false);
@@ -26,6 +26,8 @@ const eventsPage = () => {
     });
     setEventsList(eventsWithCategoryNames);
     setFilteredEventsList(eventsWithCategoryNames);
+    setOpenEventCategoryModal(false)
+    setOpenEventModal(false )
   }, [eventsDatabase, eventCategoriesDatabase]);
 
   const handleEventCategoryModalClose = () => {
@@ -75,6 +77,11 @@ const eventsPage = () => {
     setFilteredEventsList(filteredList);
   };
 
+  const handleDelete = (id) => {
+    setEventsDatabase((prev) => prev.filter(event => event.id !== id));
+    message.success('Event deleted successfully!');
+  };
+
   return (
     <div style={{ padding: '16px' }}>
       <Divider className='m-0' />
@@ -114,13 +121,13 @@ const eventsPage = () => {
           <List.Item
             actions={[
               <Button key="edit">Edit</Button>,
-              <Button key="delete">Delete</Button>,
+              <Button key="delete" onClick={() => handleDelete(item.id)}>Delete</Button>,
               <Button key="view">View Details</Button>
             ]}
           >
             <List.Item.Meta
               title={item.name}
-              description={`Date: ${item.date} | Category: ${item.category}`}
+              description={`Starts: ${item.startTime} - ${item.endTime} | Category: ${item.category}`}
             />
           </List.Item>
         )}
@@ -129,6 +136,7 @@ const eventsPage = () => {
         open={openEventCategoryModal}
         onClose={handleEventCategoryModalClose}
         onCancel={handleEventCategoryModalCancel}
+        footer={null}
       >
         <AddEventCategory />
       </Modal>
@@ -137,6 +145,7 @@ const eventsPage = () => {
         onClose={handleEventModalClose}
         onCancel={handleEventModalCancel}
         okButtonProps={null}
+        footer={null}
       >
         <AddEvent />
       </Modal>
