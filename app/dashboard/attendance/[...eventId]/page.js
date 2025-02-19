@@ -1,22 +1,25 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Table, Space, Statistic, Modal, Form, Select, Drawer, Input, message } from 'antd';
+import { Button, Divider, Table, Space, Statistic, Modal, Form, Select, Drawer, Input, message, AutoComplete } from 'antd';
 import { useData } from '../../dataFactory';
 import { usePathname } from 'next/navigation';
 
 const EventAttendanceDetails = () => {
   const pathSegments = usePathname().split('/');
   const attendanceId = pathSegments[pathSegments.length - 1];
+  const [form] = Form.useForm();
+  const [drawerForm] = Form.useForm();
   const { attendanceDatabase, eventsDatabase, membersDatabase, visitorsDatabase, childrensDatabase, setAttendanceDatabase, setVisitorsDatabase } = useData();
   const [attendanceRecords, setAttendanceRecords] = useState([]);
   const [eventDetails, setEventDetails] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [form] = Form.useForm();
-  const [drawerForm] = Form.useForm();
+  const [allIndividualsData, setAllIndividualsData] = useState([]);
   const [attendeeOptions, setAttendeeOptions] = useState([]);
+  const [currentAttendanceRecord, setCurrentAttendanceRecord] = useState(null);
 
+  // Define table columns
   const columns = [
     {
       title: 'Name',
@@ -25,8 +28,8 @@ const EventAttendanceDetails = () => {
     },
     {
       title: 'Status',
-      dataIndex: 'type',
-      key: 'type',
+      dataIndex: 'status',
+      key: 'status',
       filters: [
         { text: 'Member', value: 'Member' },
         { text: 'Visitor', value: 'Visitor' },
@@ -38,32 +41,35 @@ const EventAttendanceDetails = () => {
 
   const totalAttendees = attendanceRecords.length;
 
+  // Handle opening the modal to add attendees
   const handleAddAttendees = () => {
     setIsModalOpen(true);
   };
 
+  // Handle closing the modal
   const handleModalCancel = () => {
     setIsModalOpen(false);
     form.resetFields()
   };
 
+  // Handle submitting the modal form
   const handleModalSubmit = (values) => {
     const newAttendees = values.attendees.map(attendee => attendee.id);
-    const updatedAttendanceDatabase = attendanceDatabase.map(record => {
-      if (record.eventID === eventDetails.id) {
-        return {
-          ...record,
-          attendees: [...record.attendees, ...newAttendees]
-        };
-      }
-      return record;
-    });
-    setAttendanceDatabase(updatedAttendanceDatabase);
+    const newFilteredAttendanceData = attendanceDatabase.filter(att => att.id !== attendanceId)
+    const newAttendanceData = { 
+      id: currentAttendanceRecord.id, 
+      eventID: currentAttendanceRecord.eventID, 
+      date: currentAttendanceRecord.date || null, 
+      attendees: currentAttendanceRecord.attendees ? [...currentAttendanceRecord.attendees, ...newAttendees] : newAttendees 
+    }
+    console.log(values, newAttendanceData, newFilteredAttendanceData, 'new data: ', [...newFilteredAttendanceData, newAttendanceData]);
+    setAttendanceDatabase([...newFilteredAttendanceData, newAttendanceData]);
     console.log(values)
     setIsModalOpen(false);
     form.resetFields();
   };
 
+  // Handle submitting the drawer form
   const handleDrawerSubmit = (values) => {
     const newVisitor = { id: Date.now().toString(), ...values };
     setVisitorsDatabase((prev) => [...prev, newVisitor]);
@@ -73,30 +79,41 @@ const EventAttendanceDetails = () => {
     setIsModalOpen(true);
   };
 
-  const handleSearch = (value) => {
-    console.log('search triggered')
+  const handleDelete = (record) => { }
+
+  const handleEdit = (record) => { }
+
+  const handleFormatAttendees = (attendanceId, allIndividuals) => {
+    const currentAttRec = attendanceDatabase.find(record => record.id === attendanceId);
+    setCurrentAttendanceRecord(currentAttRec)
+    if (attendanceId && allIndividuals) {
+      const attendanceRecord = attendanceDatabase.find(record => record.id === attendanceId);
+      const event = eventsDatabase.find(event => event.id === attendanceRecord.eventID);
+      if (attendanceRecord.attendees) {
+        const attendeesArray = attendanceRecord.attendees.map(attendeeId => {
+          const attendee = allIndividuals?.find(individual => individual.value === attendeeId)
+          return attendee
+        });
+        setAttendanceRecords(attendeesArray);
+      } else setAttendanceRecords([]);
+      setEventDetails(event);
+    };
   }
 
+  // Fetch data and set state when component mounts or dependencies change
   useEffect(() => {
     const allIndividuals = [
       ...membersDatabase.map(member => ({ value: member.id, name: `${member.firstName} ${member.lastName}`, label: `${member.firstName} ${member.lastName}`, status: 'Member' })),
       ...visitorsDatabase.map(visitor => ({ value: visitor.id, name: `${visitor.firstName} ${visitor.lastName}`, label: `${visitor.firstName} ${visitor.lastName}`, status: 'Visitor' })),
       ...childrensDatabase.map(child => ({ value: child.id, name: `${child.firstName} ${child.lastName}`, label: `${child.firstName} ${child.lastName}`, status: 'Child' }))
     ]
+    setAllIndividualsData(allIndividuals);
     setAttendeeOptions(allIndividuals)
 
-    if (attendanceId && allIndividuals) {
-      const attendanceRecord = attendanceDatabase.find(record => record.id === attendanceId);
-      const event = eventsDatabase.find(event => event.id === attendanceRecord.eventID);
-      const attendeesArray = attendanceRecord.attendees.map(attendeeId => {
-        const attendee = allIndividuals?.find(individual => individual.id === attendeeId)
-        return attendee
-      })
-      console.log(attendeesArray)
-      setEventDetails(event);
-      setAttendanceRecords(attendeesArray);
-    };
+    handleFormatAttendees(attendanceId, allIndividuals);
+
   }, [attendanceDatabase, eventsDatabase, membersDatabase, visitorsDatabase, childrensDatabase]);
+
   return (
     <div style={{ padding: '16px' }}>
       <Divider />
@@ -128,12 +145,15 @@ const EventAttendanceDetails = () => {
                       name={[field.name, 'id']}
                       rules={[{ required: true, message: 'Please select an attendee' }]}
                     >
-                      <Select
-                        showSearch
-                        placeholder="Select Attendee"
-                        onSearch={handleSearch}
+                      <AutoComplete
+                        style={{
+                          width: 200,
+                        }}
                         options={attendeeOptions}
-                        style={{ width: 200 }}
+                        placeholder="Add person"
+                        filterOption={(inputValue, option) =>
+                          option.name.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                        }
                       />
                     </Form.Item>
                     <div>

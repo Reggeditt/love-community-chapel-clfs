@@ -4,6 +4,7 @@ import React from 'react';
 import { Button, DatePicker, Form, Input, Select } from 'antd';
 import { useData } from '../../dataFactory';
 import { useRouter } from 'next/navigation';
+import moment from 'moment';
 
 const layout = {
   labelCol: {
@@ -30,12 +31,14 @@ const AddNewAttendance = () => {
   };
 
   const onFinish = (values) => {
+    const formattedDate = moment(values.date).format('YYYY/MM/DD');
     const newAttendanceRecord = {
-      id: attendanceDatabase.length + 1,
+      id: `a${attendanceDatabase.length + 1}`,
       ...values,
-      eventDate: values.eventDate.toISOString(),
+      date: formattedDate,
       numberInAttendance: 0,
     };
+    console.log('submit fired with values:', values, 'new record:', newAttendanceRecord);
     setAttendanceDatabase([...attendanceDatabase, newAttendanceRecord]);
     router.push('/dashboard/attendance')
   };

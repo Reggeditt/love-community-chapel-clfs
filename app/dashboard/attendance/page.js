@@ -50,7 +50,9 @@ const Attendance = () => {
 
   return (
     <>
+      {JSON.stringify(attendanceDatabase)}
       <Divider className='my-1' />
+      {JSON.stringify(eventsDatabase)}
       <div className='px-4 flex flex-wrap items-center' size='middle'>
         <Form layout="inline" onFinish={handleFilter} style={{ marginBottom: '16px', flex: '1 1 auto' }}>
           <Form.Item name="event">
@@ -90,7 +92,7 @@ const Attendance = () => {
             >
               <List.Item.Meta
                 title={item.eventName}
-                description={`Date: ${new Date(item.date).toLocaleDateString()} | Category: ${item.eventCategory}`}
+                description={`Date: ${item.date} | Category: ${item.eventCategory}`}
               />
             </List.Item>
           )}

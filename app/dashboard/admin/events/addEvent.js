@@ -31,7 +31,7 @@ const AddEvent = () => {
 
   const onFinish = (values) => {
     const newEvent = {
-      id: eventsDatabase.length + 1,
+      id: `e${eventsDatabase.length + 1}`,
       ...values
     };
 
