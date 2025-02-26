@@ -21,6 +21,7 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import DataProvider from "./dataFactory"
 import { unstableSetRender } from 'antd';
 import { createRoot } from 'react-dom/client';
+import { StoreProvider } from "@/lib/contexts/storeContext"
 
 
 unstableSetRender((node, container) => {
@@ -38,19 +39,21 @@ unstableSetRender((node, container) => {
 const layout = ({ children }) => {
   return (
     <DataProvider>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-            <div className="flex items-center gap-2 px-4">
-              <SidebarTrigger className="-ml-1" />
-              <Separator orientation="vertical" className="mr-2 h-4" />
-              <BreadcrumbNav />
-            </div>
-          </header>
-          <AntdRegistry>{children}</AntdRegistry>
-        </SidebarInset>
-      </SidebarProvider>
+      <StoreProvider>
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset>
+            <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+              <div className="flex items-center gap-2 px-4">
+                <SidebarTrigger className="-ml-1" />
+                <Separator orientation="vertical" className="mr-2 h-4" />
+                <BreadcrumbNav />
+              </div>
+            </header>
+            <AntdRegistry>{children}</AntdRegistry>
+          </SidebarInset>
+        </SidebarProvider>
+      </StoreProvider>
     </DataProvider>
   )
 }
