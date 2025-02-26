@@ -74,6 +74,8 @@ const DataProvider = ({children}) => {
       childrensDatabase, setChildrensDatabase,
       staffDatabase, setStaffDatabase,
       youthsDatabase, setYouthsDatabase,
+      menDatabase, setMenDatabase,
+      womenDatabase, setWomenDatabase,
       eventsDatabase, setEventsDatabase,
       groupsDatabase, setGroupsDatabase,
       financialDatabase, setFinancialDatabase,
@@ -82,8 +84,6 @@ const DataProvider = ({children}) => {
       communicationsDatabase, setCommunicationsDatabase,
       usersDatabase, setUsersDatabase,
       eventCategoriesDatabase, setEventCategoriesDatabase,
-      menDatabase, setMenDatabase,
-      womenDatabase, setWomenDatabase
     }}>
       {children}
     </dataFactory.Provider>

@@ -10,6 +10,7 @@ const AddEventCategory = dynamic(() => import('./addEventCategory'), { loading: 
 const AddEvent = dynamic(() => import('./addEvent'), { loading: () => <p>loading...</p> })
 import { FloatButton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import EditEvent from './editEvent';
 
 const eventsPage = () => {
   const { eventsDatabase, eventCategoriesDatabase, setEventsDatabase } = useData();
@@ -18,6 +19,7 @@ const eventsPage = () => {
   const [openEventCategoryModal, setOpenEventCategoryModal] = useState(false);
   const [openEventModal, setOpenEventModal] = useState(false);
   const [nameSuggestions, setNameSuggestions] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null)
 
   useEffect(() => {
     const eventsWithCategoryNames = eventsDatabase.map(event => {
@@ -77,6 +79,11 @@ const eventsPage = () => {
     setFilteredEventsList(filteredList);
   };
 
+  const handleEdit = (item) => {
+    setSelectedEvent(item)
+    setOpenEventModal(true)
+  }
+
   const handleDelete = (id) => {
     setEventsDatabase((prev) => prev.filter(event => event.id !== id));
     message.success('Event deleted successfully!');
@@ -84,6 +91,7 @@ const eventsPage = () => {
 
   return (
     <div style={{ padding: '16px' }}>
+      {JSON.stringify(eventsDatabase)}
       <Divider className='m-0' />
       <Space className='px-4' size='middle' style={{ marginBottom: '4px' }}>
         <Button onClick={() => setOpenEventCategoryModal(!openEventCategoryModal)}>Add Event Category</Button>
@@ -120,9 +128,8 @@ const eventsPage = () => {
         renderItem={(item) => (
           <List.Item
             actions={[
-              <Button key="edit">Edit</Button>,
+              <Button key="edit" onClick={()=>handleEdit(item)}>Edit</Button>,
               <Button key="delete" onClick={() => handleDelete(item.id)}>Delete</Button>,
-              <Button key="view">View Details</Button>
             ]}
           >
             <List.Item.Meta
@@ -147,7 +154,7 @@ const eventsPage = () => {
         okButtonProps={null}
         footer={null}
       >
-        <AddEvent />
+        {!selectedEvent? <AddEvent />: <EditEvent eventData={selectedEvent}/>}
       </Modal>
       <FloatButton.Group shape="circle" style={{ right: 24, bottom: 24 }}>
         <FloatButton icon={<PlusOutlined />} onClick={() => setOpenEventModal(true)} tooltip="Add New Event" />

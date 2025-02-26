@@ -12,7 +12,7 @@ const Attendance = () => {
   const [attendanceList, setAttendanceList] = useState([]);
   const [selectedEventID, setSelectedEventID] = useState(null)
   const [openAddRecordModal, setOpenAddRecordModal] = useState(false)
-
+  
   useEffect(() => {
     const listWithEventDetails = attendanceDatabase.map(record => {
       const event = eventsDatabase.find(event => event.id === record.eventID);
@@ -50,9 +50,7 @@ const Attendance = () => {
 
   return (
     <>
-      {JSON.stringify(attendanceDatabase)}
       <Divider className='my-1' />
-      {JSON.stringify(eventsDatabase)}
       <div className='px-4 flex flex-wrap items-center' size='middle'>
         <Form layout="inline" onFinish={handleFilter} style={{ marginBottom: '16px', flex: '1 1 auto' }}>
           <Form.Item name="event">
@@ -82,13 +80,13 @@ const Attendance = () => {
           dataSource={filteredAttendanceList}
           renderItem={item => (
             <List.Item
-              actions={[
-                <Button key="add" onClick={()=>{
-                  setSelectedEventID(item.id)
-                  setOpenAddRecordModal(true)
-                }}>Add Records</Button>,
-                <Button key="view"><Link href={`/dashboard/attendance/${item.id}`}>View Attendance Details</Link></Button>
-              ]}
+            actions={[
+              <Button key="add" onClick={()=>{
+                setSelectedEventID(item.id)
+                setOpenAddRecordModal(true)
+              }}>Add Records</Button>,
+              <Button key="view"><Link href={`/dashboard/attendance/${item.id}`}>View Attendance Details</Link></Button>
+            ]}
             >
               <List.Item.Meta
                 title={item.eventName}
@@ -103,8 +101,8 @@ const Attendance = () => {
         onCancel={()=>setOpenAddRecordModal(!openAddRecordModal)}
         onClose={()=>setOpenAddRecordModal(!openAddRecordModal)}
         footer={null}
-      >
-        <AddEventAttendanceRecord eventID={selectedEventID} />
+        >
+        <AddEventAttendanceRecord eventID={selectedEventID} isModalOpen={openAddRecordModal} setIsModalOpen={setOpenAddRecordModal} />
       </Modal>
     </>
   );

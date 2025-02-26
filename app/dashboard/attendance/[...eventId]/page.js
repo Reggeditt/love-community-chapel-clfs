@@ -1,9 +1,12 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Table, Space, Statistic, Modal, Form, Select, Drawer, Input, message, AutoComplete } from 'antd';
+import { Button, Divider, Space, Statistic, Form, message } from 'antd';
 import { useData } from '../../dataFactory';
 import { usePathname } from 'next/navigation';
+import AttendeesTable from './AttendeesTable';
+import AddAttendeesModal from './AddAttendeesModal';
+import AddFirstTimerDrawer from './AddFirstTimerDrawer';
 
 const EventAttendanceDetails = () => {
   const pathSegments = usePathname().split('/');
@@ -17,7 +20,6 @@ const EventAttendanceDetails = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [allIndividualsData, setAllIndividualsData] = useState([]);
   const [attendeeOptions, setAttendeeOptions] = useState([]);
-  const [currentAttendanceRecord, setCurrentAttendanceRecord] = useState(null);
 
   // Define table columns
   const columns = [
@@ -35,7 +37,7 @@ const EventAttendanceDetails = () => {
         { text: 'Visitor', value: 'Visitor' },
         { text: 'Child', value: 'Child' },
       ],
-      onFilter: (value, record) => record.type === value,
+      onFilter: (value, record) => record.status === value,
     },
   ];
 
@@ -55,15 +57,16 @@ const EventAttendanceDetails = () => {
   // Handle submitting the modal form
   const handleModalSubmit = (values) => {
     const newAttendees = values.attendees.map(attendee => attendee.id);
-    const newFilteredAttendanceData = attendanceDatabase.filter(att => att.id !== attendanceId)
-    const newAttendanceData = { 
-      id: currentAttendanceRecord.id, 
-      eventID: currentAttendanceRecord.eventID, 
-      date: currentAttendanceRecord.date || null, 
-      attendees: currentAttendanceRecord.attendees ? [...currentAttendanceRecord.attendees, ...newAttendees] : newAttendees 
-    }
-    console.log(values, newAttendanceData, newFilteredAttendanceData, 'new data: ', [...newFilteredAttendanceData, newAttendanceData]);
-    setAttendanceDatabase([...newFilteredAttendanceData, newAttendanceData]);
+    const updatedAttendanceDatabase = attendanceDatabase.map(record => {
+      if (record.eventID === eventDetails.id) {
+        return {
+          ...record,
+          attendees: [...record.attendees, ...newAttendees]
+        };
+      }
+      return record;
+    });
+    setAttendanceDatabase(updatedAttendanceDatabase);
     console.log(values)
     setIsModalOpen(false);
     form.resetFields();
@@ -79,27 +82,6 @@ const EventAttendanceDetails = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (record) => { }
-
-  const handleEdit = (record) => { }
-
-  const handleFormatAttendees = (attendanceId, allIndividuals) => {
-    const currentAttRec = attendanceDatabase.find(record => record.id === attendanceId);
-    setCurrentAttendanceRecord(currentAttRec)
-    if (attendanceId && allIndividuals) {
-      const attendanceRecord = attendanceDatabase.find(record => record.id === attendanceId);
-      const event = eventsDatabase.find(event => event.id === attendanceRecord.eventID);
-      if (attendanceRecord.attendees) {
-        const attendeesArray = attendanceRecord.attendees.map(attendeeId => {
-          const attendee = allIndividuals?.find(individual => individual.value === attendeeId)
-          return attendee
-        });
-        setAttendanceRecords(attendeesArray);
-      } else setAttendanceRecords([]);
-      setEventDetails(event);
-    };
-  }
-
   // Fetch data and set state when component mounts or dependencies change
   useEffect(() => {
     const allIndividuals = [
@@ -110,8 +92,16 @@ const EventAttendanceDetails = () => {
     setAllIndividualsData(allIndividuals);
     setAttendeeOptions(allIndividuals)
 
-    handleFormatAttendees(attendanceId, allIndividuals);
-
+    if (attendanceId && allIndividuals) {
+      const attendanceRecord = attendanceDatabase.find(record => record.id === attendanceId);
+      const event = eventsDatabase.find(event => event.id === attendanceRecord.eventID);
+      const attendeesArray = attendanceRecord.attendees ? attendanceRecord.attendees.map(attendeeId => {
+        const attendee = allIndividuals?.find(individual => individual.value === attendeeId)
+        return attendee
+      }) : [];
+      setEventDetails(event);
+      setAttendanceRecords(attendeesArray);
+    };
   }, [attendanceDatabase, eventsDatabase, membersDatabase, visitorsDatabase, childrensDatabase]);
 
   return (
@@ -122,94 +112,22 @@ const EventAttendanceDetails = () => {
         <Button type="primary" onClick={handleAddAttendees}>Add Attendees</Button>
       </Space>
       <Divider />
-      <Table
-        columns={columns}
-        dataSource={attendanceRecords}
-        rowKey="id"
-        pagination={{ pageSize: 10 }}
+      <AttendeesTable columns={columns} dataSource={attendanceRecords} />
+      <AddAttendeesModal
+        isModalOpen={isModalOpen}
+        handleModalCancel={handleModalCancel}
+        handleModalSubmit={handleModalSubmit}
+        form={form}
+        attendeeOptions={attendeeOptions}
+        setIsDrawerOpen={setIsDrawerOpen}
+        setIsModalOpen={setIsModalOpen}
       />
-      <Modal
-        title="Add Attendees"
-        open={isModalOpen}
-        onCancel={handleModalCancel}
-        footer={null}
-      >
-        <Form form={form} onFinish={handleModalSubmit}>
-          <Form.List name="attendees">
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map((field, index) => (
-                  <Space key={field.key} align="baseline">
-                    <Form.Item
-                      {...field}
-                      name={[field.name, 'id']}
-                      rules={[{ required: true, message: 'Please select an attendee' }]}
-                    >
-                      <AutoComplete
-                        style={{
-                          width: 200,
-                        }}
-                        options={attendeeOptions}
-                        placeholder="Add person"
-                        filterOption={(inputValue, option) =>
-                          option.name.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                        }
-                      />
-                    </Form.Item>
-                    <div>
-                      <Button type="link" onClick={() => remove(field.name)}>Remove</Button>
-                      <Button type="link" onClick={() => { setIsDrawerOpen(true); setIsModalOpen(false); }}>First-timer</Button>
-                    </div>
-                  </Space>
-                ))}
-                <Form.Item>
-                  <Button type="dashed" onClick={() => add()} block>
-                    Add Attendee
-                  </Button>
-                </Form.Item>
-              </>
-            )}
-          </Form.List>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>Submit</Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Drawer
-        title="Add First-timer"
-        width={360}
-        onClose={() => setIsDrawerOpen(false)}
-        open={isDrawerOpen}
-      >
-        <Form form={drawerForm} onFinish={handleDrawerSubmit} layout="vertical">
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Please enter the name' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[{ required: true, message: 'Please enter the email' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="contact"
-            label="Contact"
-            rules={[{ required: true, message: 'Please enter the contact' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
-      </Drawer>
+      <AddFirstTimerDrawer
+        isDrawerOpen={isDrawerOpen}
+        setIsDrawerOpen={setIsDrawerOpen}
+        handleDrawerSubmit={handleDrawerSubmit}
+        drawerForm={drawerForm}
+      />
     </div>
   );
 };
