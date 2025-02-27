@@ -3,13 +3,12 @@
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { useData } from '../dataFactory'
+import { useData } from '../../dataFactory'
 import { Divider, Space, Table } from 'antd';
-
 
 const Children = () => {
   const [tableData, setTableData] = useState(null)
-  const {childrensDatabase} = useData();
+  const { childrenDatabase } = useData();
   const columns = [
     {
       title: 'First Name',
@@ -193,14 +192,15 @@ const Children = () => {
       width: '40%',
     },
   ];
-  
+
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   };
-  
-  useEffect(()=>{
-    setTableData(childrensDatabase)
-  },[childrensDatabase])
+
+  useEffect(() => {
+    setTableData(childrenDatabase)
+  }, [childrenDatabase])
+
   return (
     <>
       <Divider />
@@ -208,7 +208,7 @@ const Children = () => {
         <Button><Link href={'/dashboard/children/new'}>Add New Child</Link></Button>
       </Space>
       <Divider />
-      <Table columns={columns} dataSource={tableData} onChange={onChange} scroll={{x:true}}/>
+      <Table columns={columns} dataSource={tableData} onChange={onChange} scroll={{ x: true }} />
     </>
   )
 }

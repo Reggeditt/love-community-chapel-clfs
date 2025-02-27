@@ -1,16 +1,18 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-import { useData } from '../dataFactory'
-import { Divider, Space, Table } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Divider, Space, Table, Modal, Form, message } from 'antd';
 import { FloatButton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { useStore } from '@/lib/contexts/storeContext';
+import MemberForm from './MemberForm';
 
 const Members = () => {
-  const [tableData, setTableData] = useState(null)
-  const {membersDatabase} = useData();
+  const [tableData, setTableData] = useState(null);
+  const { members } = useStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form] = Form.useForm();
+
   const columns = [
     {
       title: 'First Name',
@@ -27,8 +29,7 @@ const Members = () => {
         {
           text: 'Category 2',
           value: 'Category 2',
-        },
-      ],
+        }],
       filterMode: 'tree',
       filterSearch: true,
       onFilter: (value, record) => record.name.startsWith(value),
@@ -192,32 +193,50 @@ const Members = () => {
       onFilter: (value, record) => record.address.startsWith(value),
       filterSearch: true,
       width: '40%',
-    },
+    }
   ];
-  
+
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   };
-  
-  useEffect(()=>{
-    setTableData(membersDatabase)
-  },[membersDatabase])
+
+  useEffect(() => {
+    setTableData(members)
+  }, [members])
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    form.resetFields();
+  };
+
   return (
     <>
-      <Table 
-        columns={columns} 
-        dataSource={tableData} 
-        onChange={onChange} 
-        scroll={{ x: true }} 
+      <Table
+        columns={columns}
+        dataSource={tableData}
+        onChange={onChange}
+        scroll={{ x: true }}
         pagination={{ responsive: true }}
       />
-      <FloatButton.Group 
-        shape="circle" 
-        style={{ right: 24, bottom: 24 }} 
+      <FloatButton.Group
+        shape="circle"
+        style={{ right: 24, bottom: 24 }}
         className="float-button-group"
       >
-        <FloatButton icon={<PlusOutlined />} tooltip="Add New Member" href="/dashboard/members/new" />
+        <FloatButton icon={<PlusOutlined />} tooltip="Add New Member" onClick={handleModalOpen} />
       </FloatButton.Group>
+      <Modal
+        title="Add New Member"
+        open={isModalOpen}
+        onCancel={handleModalClose}
+        footer={null}
+      >
+        <MemberForm form={form} onClose={handleModalClose} />
+      </Modal>
       <style jsx>{`
         @media (max-width: 768px) {
           .float-button-group {

@@ -7,18 +7,18 @@ import { usePathname } from 'next/navigation';
 import AttendeesTable from './AttendeesTable';
 import AddAttendeesModal from './AddAttendeesModal';
 import AddFirstTimerDrawer from './AddFirstTimerDrawer';
+import { useStore } from '@/lib/contexts/storeContext';
 
 const EventAttendanceDetails = () => {
   const pathSegments = usePathname().split('/');
   const attendanceId = pathSegments[pathSegments.length - 1];
   const [form] = Form.useForm();
   const [drawerForm] = Form.useForm();
-  const { attendanceDatabase, eventsDatabase, membersDatabase, visitorsDatabase, childrensDatabase, setAttendanceDatabase, setVisitorsDatabase } = useData();
+  const { attendance, events, members, visitors, allIndividuals, addDocument, formatAllIndividuals } = useStore();
   const [attendanceRecords, setAttendanceRecords] = useState([]);
   const [eventDetails, setEventDetails] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [allIndividualsData, setAllIndividualsData] = useState([]);
   const [attendeeOptions, setAttendeeOptions] = useState([]);
 
   // Define table columns
@@ -57,22 +57,13 @@ const EventAttendanceDetails = () => {
   // Handle submitting the modal form
   const handleModalSubmit = (values) => {
     const newAttendees = values.attendees.map(attendee => attendee.id);
-    const updatedAttendanceDatabase = attendanceDatabase.map(record => {
-      if (record.eventID === eventDetails.id) {
-        return {
-          ...record,
-          attendees: [...record.attendees, ...newAttendees]
-        };
-      }
-      return record;
-    });
-    setAttendanceDatabase(updatedAttendanceDatabase);
-    console.log(values)
+    addDocument('attendance', newAttendees
+    );
     setIsModalOpen(false);
     form.resetFields();
   };
 
-  // Handle submitting the drawer form
+  // Handle submitting the drawer form 
   const handleDrawerSubmit = (values) => {
     const newVisitor = { id: Date.now().toString(), ...values };
     setVisitorsDatabase((prev) => [...prev, newVisitor]);
@@ -84,17 +75,12 @@ const EventAttendanceDetails = () => {
 
   // Fetch data and set state when component mounts or dependencies change
   useEffect(() => {
-    const allIndividuals = [
-      ...membersDatabase.map(member => ({ value: member.id, name: `${member.firstName} ${member.lastName}`, label: `${member.firstName} ${member.lastName}`, status: 'Member' })),
-      ...visitorsDatabase.map(visitor => ({ value: visitor.id, name: `${visitor.firstName} ${visitor.lastName}`, label: `${visitor.firstName} ${visitor.lastName}`, status: 'Visitor' })),
-      ...childrensDatabase.map(child => ({ value: child.id, name: `${child.firstName} ${child.lastName}`, label: `${child.firstName} ${child.lastName}`, status: 'Child' }))
-    ]
-    setAllIndividualsData(allIndividuals);
+    formatAllIndividuals();
     setAttendeeOptions(allIndividuals)
 
     if (attendanceId && allIndividuals) {
-      const attendanceRecord = attendanceDatabase.find(record => record.id === attendanceId);
-      const event = eventsDatabase.find(event => event.id === attendanceRecord.eventID);
+      const attendanceRecord = attendance?.find(record => record.id === attendanceId);
+      const event = events?.find(event => event.id === attendanceRecord.eventID);
       const attendeesArray = attendanceRecord.attendees ? attendanceRecord.attendees.map(attendeeId => {
         const attendee = allIndividuals?.find(individual => individual.value === attendeeId)
         return attendee
@@ -102,7 +88,7 @@ const EventAttendanceDetails = () => {
       setEventDetails(event);
       setAttendanceRecords(attendeesArray);
     };
-  }, [attendanceDatabase, eventsDatabase, membersDatabase, visitorsDatabase, childrensDatabase]);
+  }, [attendance, events, members, visitors]);
 
   return (
     <div style={{ padding: '16px' }}>

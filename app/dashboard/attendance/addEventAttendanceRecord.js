@@ -1,13 +1,10 @@
 import React from 'react'
-import { Form, Button } from 'antd'
 import AddFirstTimerDrawer from './[...eventId]/AddFirstTimerDrawer';
 import AddAttendeesModal from './[...eventId]/AddAttendeesModal';
 import { useData } from '../dataFactory';
 
-
-const AddEventAttendanceRecord = ({ setIsModalOpen, handleModalCancel, handleModalSubmit, form, attendeeOptions, isDrawerOpen, setIsDrawerOpen, handleDrawerSubmit, drawerForm }) => {
-
-  const {setAttendanceDatabase} = useData();
+const AddEventAttendanceRecord = ({ setIsModalOpen, form, attendeeOptions, isDrawerOpen, setIsDrawerOpen, drawerForm }) => {
+  const { setAttendanceDatabase } = useData();
 
   // Handle opening the modal to add attendees
   const handleAddAttendees = () => {
@@ -50,7 +47,7 @@ const AddEventAttendanceRecord = ({ setIsModalOpen, handleModalCancel, handleMod
 
   return (
     <>
-      <AddAttendeesModal isModalOpen handleModalCancel handleModalSubmit form attendeeOptions setIsDrawerOpen setIsModalOpen/>
+      <AddAttendeesModal isModalOpen handleModalCancel handleModalSubmit form attendeeOptions setIsDrawerOpen setIsModalOpen />
       <AddFirstTimerDrawer isDrawerOpen setIsDrawerOpen handleDrawerSubmit drawerForm />
     </>
   )

@@ -1,8 +1,10 @@
 'use client'
 
-import React from 'react';
-import { Button, DatePicker, Form, Input, InputNumber } from 'antd';
-import { useData } from '../../dataFactory';
+import React, { useEffect, useState } from 'react';
+import { AutoComplete, Button, DatePicker, Form, Input, InputNumber, message } from 'antd';
+import { useData } from '../dataFactory';
+import { useRouter } from 'next/navigation';
+import { useStore } from '@/lib/contexts/storeContext';
 const layout = {
   labelCol: {
     span: 8,
@@ -12,8 +14,11 @@ const layout = {
   },
 };
 
-const AddNewChild = () => {
-  const {setChildrensDatabase} = useData()
+const VisitorForm = ({onClose}) => {
+  const {addDocument, allIndividuals, formatAllIndividuals} = useStore()
+  const router = useRouter()
+  const [form] = Form.useForm()
+  const [referrerOptions, setReferrerOptions] = useState([])
 
   const validateMessages = {
     required: '${label} is required!',
@@ -25,11 +30,30 @@ const AddNewChild = () => {
       range: '${label} must be between ${min} and ${max}',
     },
   };
+
   const onFinish = (values) => {
-    console.log(values);
-    setChildrensDatabase((prev) => [...prev, values])
+    const newVisitor = {
+      firstName: values.firstName,
+      lastName: values.lastName || ' ',
+      email: values.email || " ",
+      contact: values.contact || " ",
+      occupation: values.occupation || " ",
+      dob: values.dob || " ",
+      age: values.age || 0,
+      residentialArea: values.residentialArea || " ",
+      notes: values.notes || " ",
+    }
+    addDocument('visitors', values)
+    router.push('/dashboard/visitors')
+    message.success('Visitor added successfully')
+    form.resetFields()
   };
 
+  useEffect(() => {
+    const data = formatAllIndividuals()
+    const referrers = data
+    setReferrerOptions(referrers)
+  }, []);
   return (
     <div className='flex justify-center items-center h-full w-full'>
       <Form
@@ -86,29 +110,6 @@ const AddNewChild = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name={'Occupation'}
-        label="Occupation"
-        rules={[
-          {
-            type: 'text',
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name={'dob'}
-        label="Date Of Birth"
-        rules={[
-          {
-            type: 'date',
-          },
-        ]}
-      >
-        <DatePicker />
-      </Form.Item>
-  
-      <Form.Item
         name={ 'age'}
         label="Age"
         rules={[
@@ -124,6 +125,18 @@ const AddNewChild = () => {
       <Form.Item name={'residentialArea'} label="residentialArea">
         <Input />
       </Form.Item>
+      <Form.Item name={'referrer'} label="Referrer">
+      <AutoComplete
+          style={{
+            width: 200,
+          }}
+          options={referrerOptions}
+          placeholder="Add person"
+          filterOption={(inputValue, option) =>
+            option.name.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+          }
+        />
+      </Form.Item>
       <Form.Item name={'notes'} label="Notes">
         <Input.TextArea />
       </Form.Item>
@@ -137,4 +150,4 @@ const AddNewChild = () => {
   )
 }
 
-export default AddNewChild
+export default VisitorForm

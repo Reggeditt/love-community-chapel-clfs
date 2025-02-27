@@ -1,36 +1,34 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { Avatar, List, Skeleton, message } from 'antd';
-import { Button, Divider, Form, Modal, Space, DatePicker, Select, Input, AutoComplete } from 'antd'
-import Link from 'next/link'
-import { useData } from '../../dataFactory'
-import dynamic from 'next/dynamic'
-const AddEventCategory = dynamic(() => import('./addEventCategory'), { loading: () => <p>Loading...</p> })
-const AddEvent = dynamic(() => import('./addEvent'), { loading: () => <p>loading...</p> })
+import { List, message } from 'antd';
+import { Button, Divider, Form, Modal, Space, DatePicker, Select, Input, AutoComplete } from 'antd';
+import dynamic from 'next/dynamic';
 import { FloatButton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import EditEvent from './editEvent';
+import { useStore } from '@/lib/contexts/storeContext';
+
+const AddEventCategory = dynamic(() => import('./addEventCategory'), { loading: () => <p>Loading...</p> });
+const AddEvent = dynamic(() => import('./addEvent'), { loading: () => <p>loading...</p> });
+const EditEvent = dynamic(() => import('./editEvent'), { loading: () => <p>loading...</p> });
 
 const eventsPage = () => {
-  const { eventsDatabase, eventCategoriesDatabase, setEventsDatabase } = useData();
+  const { eventCategories, events, deleteDocument } = useStore();
   const [eventsList, setEventsList] = useState([]);
   const [filteredEventsList, setFilteredEventsList] = useState([]);
   const [openEventCategoryModal, setOpenEventCategoryModal] = useState(false);
   const [openEventModal, setOpenEventModal] = useState(false);
   const [nameSuggestions, setNameSuggestions] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
-    const eventsWithCategoryNames = eventsDatabase.map(event => {
-      const category = eventCategoriesDatabase.find(cat => cat.id === event.categoryID);
-      return { ...event, category: category ? category.name : 'Unknown' };
-    });
-    setEventsList(eventsWithCategoryNames);
-    setFilteredEventsList(eventsWithCategoryNames);
-    setOpenEventCategoryModal(false)
-    setOpenEventModal(false )
-  }, [eventsDatabase, eventCategoriesDatabase]);
+      const eventsWithCategoryNames = events?.map(event => {
+        const category = eventCategories.find(cat => cat.id === event.categoryID);
+        return { ...event, category: category ? category.name : 'Unknown' };
+      });
+      setEventsList(eventsWithCategoryNames);
+      setFilteredEventsList(eventsWithCategoryNames);
+  }, [eventCategories]);
 
   const handleEventCategoryModalClose = () => {
     setOpenEventCategoryModal(false);
@@ -80,18 +78,23 @@ const eventsPage = () => {
   };
 
   const handleEdit = (item) => {
-    setSelectedEvent(item)
-    setOpenEventModal(true)
-  }
+    setSelectedEvent(item);
+    setOpenEventModal(true);
+  };
 
-  const handleDelete = (id) => {
-    setEventsDatabase((prev) => prev.filter(event => event.id !== id));
-    message.success('Event deleted successfully!');
+  const handleDelete = async (id) => {
+    try {
+      await deleteDocument('events', id);
+      message.success('Event deleted successfully!');
+    } catch (error) {
+      message.error('Failed to delete event!');
+    }
   };
 
   return (
     <div style={{ padding: '16px' }}>
-      {JSON.stringify(eventsDatabase)}
+      {JSON.stringify(eventCategories)}
+      {JSON.stringify(events)}
       <Divider className='m-0' />
       <Space className='px-4' size='middle' style={{ marginBottom: '4px' }}>
         <Button onClick={() => setOpenEventCategoryModal(!openEventCategoryModal)}>Add Event Category</Button>
@@ -112,7 +115,7 @@ const eventsPage = () => {
         <Form.Item name="category">
           <Select placeholder="Category" style={{ width: 200 }}>
             <Select.Option value="None">None</Select.Option>
-            {eventCategoriesDatabase.map(category => (
+            {eventCategories.map(category => (
               <Select.Option key={category.id} value={category.name}>{category.name}</Select.Option>
             ))}
           </Select>
@@ -145,7 +148,7 @@ const eventsPage = () => {
         onCancel={handleEventCategoryModalCancel}
         footer={null}
       >
-        <AddEventCategory />
+        <AddEventCategory setOpenEventCategoryModal={setOpenEventCategoryModal}/>
       </Modal>
       <Modal
         open={openEventModal}
@@ -154,7 +157,7 @@ const eventsPage = () => {
         okButtonProps={null}
         footer={null}
       >
-        {!selectedEvent? <AddEvent />: <EditEvent eventData={selectedEvent}/>}
+        {!selectedEvent ? <AddEvent setOpenEventModal={setOpenEventModal} /> : <EditEvent eventData={selectedEvent} />}
       </Modal>
       <FloatButton.Group shape="circle" style={{ right: 24, bottom: 24 }}>
         <FloatButton icon={<PlusOutlined />} onClick={() => setOpenEventModal(true)} tooltip="Add New Event" />

@@ -1,9 +1,8 @@
 'use client'
 
 import React from 'react';
-import { Button, DatePicker, Form, Input, InputNumber, message } from 'antd';
-import { useData } from '../../dataFactory';
-import { useRouter } from 'next/navigation';
+import { Button, DatePicker, Form, Input, InputNumber } from 'antd';
+import { useData } from '../../../dataFactory';
 const layout = {
   labelCol: {
     span: 8,
@@ -13,10 +12,8 @@ const layout = {
   },
 };
 
-const AddNewVisitor = () => {
-  const {setVisitorsDatabase} = useData()
-  const router = useRouter()
-  const [form] = Form.useForm()
+const AddNewChild = () => {
+  const {setChildrensDatabase} = useData()
 
   const validateMessages = {
     required: '${label} is required!',
@@ -28,12 +25,9 @@ const AddNewVisitor = () => {
       range: '${label} must be between ${min} and ${max}',
     },
   };
-
   const onFinish = (values) => {
-    form.resetFields()
-    message.success('Visitor added successfully')
-    router.push('/dashboard/visitors')
-    setVisitorsDatabase((prev) => [...prev, values])
+    console.log(values);
+    setChildrensDatabase((prev) => [...prev, values])
   };
 
   return (
@@ -143,4 +137,4 @@ const AddNewVisitor = () => {
   )
 }
 
-export default AddNewVisitor
+export default AddNewChild

@@ -1,24 +1,24 @@
 import { Button, Form, Input, message } from 'antd'
 import { PlusIcon } from 'lucide-react'
 import React from 'react'
-import { useData } from '../../dataFactory';
+import { useStore } from '@/lib/contexts/storeContext';
 
-const AddEventCategory = () => {
+const AddEventCategory = ({setOpenEventCategoryModal}) => {
   const [form] = Form.useForm()
-  const { eventCategoriesDatabase, setEventCategoriesDatabase } = useData()
+  const { eventCategories, addDocument } = useStore();
 
   const handleSubmit = async (values) => {
-    const newCategories = values.eventCategories.map((category, index) => ({
-      id: eventCategoriesDatabase.length + index + 1,
-      ...category
-    }));
-
-    const uniqueCategories = newCategories.filter(newCategory => 
-      !eventCategoriesDatabase.some(existingCategory => existingCategory.name === newCategory.name)
-    );
-
-    setEventCategoriesDatabase([...eventCategoriesDatabase, ...uniqueCategories]);
-    message.success('Categories submitted successfully!');
+    console.log('values', values);
+    for (let i = 0; i < values.eventCategories.length; i++) {
+      const newEventCategory = values.eventCategories[i];
+      const isDuplicate = eventCategories.find(category => category.name.toLowerCase() === newEventCategory.name.toLowerCase());
+      if (isDuplicate) {
+        message.error('Event Category already exists');
+      } else {
+        addDocument('eventCategories', newEventCategory);
+        setOpenEventCategoryModal(false);
+      }
+    }
     form.resetFields();
   };
 

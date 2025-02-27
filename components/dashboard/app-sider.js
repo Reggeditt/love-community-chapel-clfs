@@ -45,10 +45,10 @@ const data = {
           title: "Visitors",
           url: "/dashboard/visitors",
         },
-        {
-          title: "Children",
-          url: "/dashboard/children",
-        },
+        // {
+        //   title: "Children",
+        //   url: "/dashboard/children",
+        // },
         {
           title: "Attendance",
           url: "/dashboard/attendance",
@@ -59,7 +59,7 @@ const data = {
       title: "Communication",
       url: "#",
       icon: SquareTerminal,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: "Announcements",
@@ -75,7 +75,7 @@ const data = {
       title: "Finance",
       url: "#",
       icon: SquareTerminal,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: "Income",
@@ -105,6 +105,7 @@ const data = {
       title: "Admin",
       url: "/dashboard/adminpanel",
       icon: Settings2,
+      isActive: true,
       items: [
         {
           title: "Events",
@@ -112,7 +113,7 @@ const data = {
         },
         {
           title: "Groups",
-          url: "dashboard/groups",
+          url: "/dashboard/admin/groups",
         },
         {
           title: "Users/Team",

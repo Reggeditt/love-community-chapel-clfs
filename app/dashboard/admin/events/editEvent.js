@@ -1,10 +1,12 @@
-import { Form, Select, Input, TimePicker, Button } from 'antd'
-import React, { useEffect, useState } from 'react'
-import { useData } from '../../dataFactory';
+import { Form, Select, Input, TimePicker, Button } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useStore } from '../../../../lib/contexts/storeContext';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../../../../lib/firebase';
 import moment from 'moment';
 
 const EditEvent = ({ eventData }) => {
-  const { setEventsDatabase, eventsDatabase, eventCategoriesDatabase } = useData();
+  const { eventCategories } = useStore();
   const [form] = Form.useForm();
   const [initialValues, setInitialValues] = useState({});
 
@@ -19,66 +21,59 @@ const EditEvent = ({ eventData }) => {
     form.resetFields(); // Reset form fields when eventData changes
   }, [eventData, form]);
 
-  const onFinish = (values) => {
-    const filteredEventsData = eventsDatabase.filter(event => event.id !== eventData.id);
-
-    const newEvent = {
-      id: eventData.id,
-      categoryID: values.categoryID || eventData.categoryID,
-      name: values.name || eventData.name,
-      startTime: values.startTime ? values.startTime.toISOString() : eventData.startTime,
-      endTime: values.endTime ? values.endTime.toISOString() : eventData.endTime,
-      description: values.description || eventData.description
+  const onFinish = async (values) => {
+    const updatedEvent = {
+      ...values,
+      startTime: values.startTime.toISOString(),
+      endTime: values.endTime.toISOString(),
     };
-
-    setEventsDatabase([...filteredEventsData, newEvent]);
+    await updateDoc(doc(db, 'events', eventData.id), updatedEvent);
     form.resetFields();
   };
 
   return (
-    <>
-      <Form
-        onFinish={onFinish}
-        initialValues={initialValues}
-        form={form}
-        style={{
-          maxWidth: 600,
-          width: '100%',
-        }}
+    <Form
+      onFinish={onFinish}
+      initialValues={initialValues}
+      form={form}
+      style={{
+        maxWidth: 600,
+        width: '100%',
+      }}
+    >
+      <Form.Item
+        name={'categoryID'}
+        label="Select Event Category"
+        rules={[{ required: true, message: 'Please select a category!' }]}
       >
-        <Form.Item
-          name={'categoryID'}
-          label="Select Event Category"
-        >
-          <Select options={eventCategoriesDatabase.map(category => ({
-            label: category.name,
-            value: category.id
-          }))} 
-          />
-        </Form.Item>
-        <Form.Item
-          name={'name'}
-          label="Event Name"
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item name={'startTime'} label="Start Time">
-          <TimePicker disabled={true} />
-        </Form.Item>
-        <Form.Item name={'endTime'} label="End Time">
-          <TimePicker disabled={true} />
-        </Form.Item>
-        <Form.Item name={'description'} label={"Description"}>
-          <Input.TextArea />
-        </Form.Item>
-        <Form.Item label={null}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-    </>
-  )
-}
+        <Select options={eventCategories.map(category => ({
+          label: category.name,
+          value: category.id
+        }))} />
+      </Form.Item>
+      <Form.Item
+        name={'name'}
+        label="Event Name"
+        rules={[{ required: true, message: 'Please input the event name!' }]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item name={'startTime'} label="Start Time" rules={[{ required: true, message: 'Please select the start time!' }]}>
+        <TimePicker />
+      </Form.Item>
+      <Form.Item name={'endTime'} label="End Time" rules={[{ required: true, message: 'Please select the end time!' }]}>
+        <TimePicker />
+      </Form.Item>
+      <Form.Item name={'description'} label={"Description"}>
+        <Input.TextArea />
+      </Form.Item>
+      <Form.Item label={null}>
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
+  );
+};
 
-export default EditEvent
+export default EditEvent;

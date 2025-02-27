@@ -1,10 +1,11 @@
 'use client'
 
 import React from 'react';
-import { Button, DatePicker, Form, Input, Select } from 'antd';
+import { Button, DatePicker, Form, Input, message, Select } from 'antd';
 import { useData } from '../../dataFactory';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
+import { useStore } from '../../../../lib/contexts/storeContext';
 
 const layout = {
   labelCol: {
@@ -17,6 +18,8 @@ const layout = {
 
 const AddNewAttendance = () => {
   const { setAttendanceDatabase, attendanceDatabase, eventsDatabase } = useData();
+  const { addDocument, attendance, events } = useStore();
+  const [form] = Form.useForm();
   const router = useRouter()
 
   const validateMessages = {
@@ -33,19 +36,22 @@ const AddNewAttendance = () => {
   const onFinish = (values) => {
     const formattedDate = moment(values.date).format('YYYY/MM/DD');
     const newAttendanceRecord = {
-      id: `a${attendanceDatabase.length + 1}`,
-      ...values,
+      eventID: values.eventID,
+      description: values.description,
       date: formattedDate,
       numberInAttendance: 0,
     };
+    const isDuplicate = attendance.find(record => record.eventID === newAttendanceRecord.eventID && record.date === newAttendanceRecord.date);
+    if (isDuplicate) return message.error('Attendance record for this event on this date already exists!');
     console.log('submit fired with values:', values, 'new record:', newAttendanceRecord);
-    setAttendanceDatabase([...attendanceDatabase, newAttendanceRecord]);
+    addDocument('attendance', newAttendanceRecord);
     router.push('/dashboard/attendance')
   };
 
   return (
     <div className='flex justify-center items-center h-full w-full'>
       <Form
+        form={form}
         {...layout}
         name="nest-messages"
         onFinish={onFinish}
@@ -64,7 +70,7 @@ const AddNewAttendance = () => {
             },
           ]}
         >
-          <Select options={eventsDatabase.map(event => ({
+          <Select options={events.map(event => ({
             label: event.name,
             value: event.id
           }))} />

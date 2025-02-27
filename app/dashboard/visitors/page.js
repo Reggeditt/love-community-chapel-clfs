@@ -4,31 +4,49 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useData } from '../dataFactory'
-import { Divider, Space, Table, message, Tag } from 'antd';
+import { Divider, Space, Table, message, Tag, Modal } from 'antd';
 import { FloatButton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import dynamic from 'next/dynamic'
+import { useStore } from '@/lib/contexts/storeContext'
+// import VisitorForm from './VisitorForm'
+const VisitorForm = dynamic(() => import('./VisitorForm', { ssr: false, loading: () => <p>Loading...</p> }))
 
 const Visitors = () => {
   const [tableData, setTableData] = useState(null)
-  const { visitorsDatabase, membersDatabase, setMembersDatabase } = useData();
+  const { visitors, members, addDocument, allIndividuals } = useStore();
+  const [openModal, setOpenModal] = useState(false);
 
   const transferToMembers = (record) => {
-    setMembersDatabase((prev) => [...prev, record]);
+    const discipledMember = {
+      firstName: record.firstName,
+      lastName: record.lastName,
+      dob: formattedDate || ' ',
+      email: record.email || " ",
+      contact: record.contact || ' ',
+      occupation: record.occupation || ' ',
+      age: record.age || ' ',
+      residentialArea: record.residentialArea || ' ',
+      notes: record.notes || ' ',
+    }
+    addDocument('members', discipledMember)
     message.success('Visitor transferred to members database!');
   };
+
+  const onClose = () => setOpenModal(false);
 
   const columns = [
     {
       title: 'First Name',
       dataIndex: 'firstName',
-      filters: Array.from(new Set(visitorsDatabase.map(visitor => visitor.firstName))).map(name => ({ text: name, value: name })),
+      filters: Array.from(new Set(visitors?.map(visitor => visitor.firstName))).map(name => ({ text: name, value: name })),
       onFilter: (value, record) => record.firstName.includes(value),
       width: '20%',
     },
     {
       title: 'Last Name',
       dataIndex: 'lastName',
-      filters: Array.from(new Set(visitorsDatabase.map(visitor => visitor.lastName))).map(name => ({ text: name, value: name })),
+      filters: Array.from(new Set(visitors.map(visitor => visitor.lastName))).map(name => ({ text: name, value: name })),
       onFilter: (value, record) => record.lastName.includes(value),
       width: '20%',
     },
@@ -41,21 +59,21 @@ const Visitors = () => {
     {
       title: 'Contact',
       dataIndex: 'contact',
-      filters: Array.from(new Set(visitorsDatabase.map(visitor => visitor.contact))).map(contact => ({ text: contact, value: contact })),
+      filters: Array.from(new Set(visitors.map(visitor => visitor.contact))).map(contact => ({ text: contact, value: contact })),
       onFilter: (value, record) => record.contact.includes(value),
       width: '20%',
     },
     {
       title: 'Residential Area',
       dataIndex: 'residentialArea',
-      filters: Array.from(new Set(visitorsDatabase.map(visitor => visitor.residentialArea))).map(area => ({ text: area, value: area })),
+      filters: Array.from(new Set(visitors.map(visitor => visitor.residentialArea))).map(area => ({ text: area, value: area })),
       onFilter: (value, record) => record.residentialArea.includes(value),
       width: '20%',
     },
     {
       title: 'Address',
       dataIndex: 'address',
-      filters: Array.from(new Set(visitorsDatabase.map(visitor => visitor.address))).map(address => ({ text: address, value: address })),
+      filters: Array.from(new Set(visitors.map(visitor => visitor.address))).map(address => ({ text: address, value: address })),
       onFilter: (value, record) => record.address.includes(value),
       width: '30%',
     },
@@ -63,7 +81,7 @@ const Visitors = () => {
       title: 'Status',
       key: 'status',
       render: (text, record) => {
-        const isMember = membersDatabase.some(member => member.email === record.email);
+        const isMember = members.some(member => member.email === record.email);
         return (
           <Tag color={isMember ? 'green' : 'blue'}>
             {isMember ? 'Discipled' : 'Active Visitor'}
@@ -75,7 +93,7 @@ const Visitors = () => {
       title: 'Action',
       key: 'action',
       render: (text, record) => {
-        const isMember = membersDatabase.some(member => member.email === record.email);
+        const isMember = members.some(member => member.email === record.email);
         return (
           <Space size="middle">
             <Button onClick={() => transferToMembers(record)} disabled={isMember}>Discipled</Button>
@@ -90,14 +108,14 @@ const Visitors = () => {
   };
 
   useEffect(() => {
-    setTableData(visitorsDatabase)
-  }, [visitorsDatabase])
+    setTableData(visitors)
+  }, [visitors])
 
   return (
     <>
       <Divider />
       <Space className='px-4' size='middle'>
-        <Button><Link href={'/dashboard/visitors/new'}>Add New Visitor</Link></Button>
+        <Button onClick={()=>setOpenModal(true)}>Add New Visitor</Button>
       </Space>
       <Divider />
       <Table columns={columns} dataSource={tableData} onChange={onChange} scroll={{ x: true }} />
@@ -106,8 +124,16 @@ const Visitors = () => {
         style={{ right: 24, bottom: 24 }} 
         className="float-button-group"
       >
-        <FloatButton icon={<PlusOutlined />} tooltip="Add New Visitor" href="/dashboard/visitors/new" />
+        <FloatButton icon={<PlusOutlined />} tooltip="Add New Visitor" onClick={()=> setOpenModal(true)} />
       </FloatButton.Group>
+      <Modal
+        open={openModal}
+        footer={null}
+        onCancel={onClose}
+        title="Add new visitor"
+      >
+        <VisitorForm />
+      </Modal>
       <style jsx>{`
         @media (max-width: 768px) {
           .float-button-group {

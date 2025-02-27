@@ -5,18 +5,20 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useData } from '../dataFactory';
 import AddEventAttendanceRecord from './addEventAttendanceRecord';
+import { useStore } from '@/lib/contexts/storeContext';
 
 const Attendance = () => {
   const { attendanceDatabase, eventsDatabase, eventCategoriesDatabase } = useData();
+  const {attendance, events, eventCategories} = useStore()
   const [filteredAttendanceList, setFilteredAttendanceList] = useState([]);
   const [attendanceList, setAttendanceList] = useState([]);
   const [selectedEventID, setSelectedEventID] = useState(null)
   const [openAddRecordModal, setOpenAddRecordModal] = useState(false)
   
   useEffect(() => {
-    const listWithEventDetails = attendanceDatabase.map(record => {
-      const event = eventsDatabase.find(event => event.id === record.eventID);
-      const category = event ? eventCategoriesDatabase.find(cat => cat.id === event.categoryID) : null;
+    const listWithEventDetails = attendance?.map(record => {
+      const event = events?.find(event => event.id === record.eventID);
+      const category = event ? eventCategories.find(cat => cat.id === event.categoryID) : null;
       return {
         ...record,
         eventName: event ? event.name : 'Unknown Event',
@@ -26,7 +28,7 @@ const Attendance = () => {
     });
     setAttendanceList(listWithEventDetails);
     setFilteredAttendanceList(listWithEventDetails);
-  }, [attendanceDatabase, eventsDatabase, eventCategoriesDatabase]);
+  }, [attendance, events, eventCategories]);
 
   const handleFilter = (values) => {
     const { event, dateRange, category } = values;

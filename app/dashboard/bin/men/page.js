@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { useData } from '../dataFactory'
+import { useData } from '../../dataFactory'
 import { Table, Button, Divider, Space } from 'antd'
 import Link from 'next/link'
 

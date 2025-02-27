@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react';
-import { Button, DatePicker, Form, Input, Select, TimePicker } from 'antd';
-import { useData } from '../../dataFactory';
+import { Button, Form, Input, message, Select, TimePicker } from 'antd';
+import { useStore } from '../../../../lib/contexts/storeContext';
 
 const layout = {
   labelCol: {
@@ -15,9 +15,10 @@ const layout = {
   },
 };
 
-const AddEvent = () => {
-  const { setEventsDatabase, eventsDatabase, eventCategoriesDatabase } = useData();
-  
+const AddEvent = ({ setOpenEventModal }) => {
+  const { eventCategories, events, addDocument } = useStore();
+  const [form] = Form.useForm();
+
   const validateMessages = {
     required: '${label} is required!',
     types: {
@@ -29,23 +30,30 @@ const AddEvent = () => {
     },
   };
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     const newEvent = {
-      id: `e${eventsDatabase.length + 1}`,
-      ...values
-    };
-
-    const isDuplicate = eventsDatabase.some(event => event.name === newEvent.name && event.date === newEvent.date);
-
-    if (!isDuplicate) {
-      setEventsDatabase([...eventsDatabase, newEvent]);
+      name: values.name,
+      categoryID: values.categoryID,
+      startTime: values.startTime.toISOString(),
+      endTime: values.endTime ? values.endTime.toISOString() : '',
+      description: values.description? values.description : '',
     }
-  };
+    const isDuplicate = events?.find(event => event.name === newEvent.name);
+    if (isDuplicate) {
+      message.error('An event with the same name already exists!');
+      return;
+    } else {
+      addDocument('events', newEvent);
+      form.resetFields();
+      setOpenEventModal(false);
+    }
+};
 
   return (
     <div className='flex justify-center items-center h-full w-full p-4'>
       <Form
         {...layout}
+        form={form}
         name="nest-messages"
         onFinish={onFinish}
         style={{
@@ -57,13 +65,9 @@ const AddEvent = () => {
         <Form.Item
           name={'categoryID'}
           label="Select Event Category"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          rules={[{ required: true, message: 'Please select a category!' }]}
         >
-          <Select options={eventCategoriesDatabase.map(category => ({
+          <Select options={eventCategories.map(category => ({
             label: category.name,
             value: category.id
           }))} />
@@ -71,15 +75,11 @@ const AddEvent = () => {
         <Form.Item
           name={'name'}
           label="Event Name"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          rules={[{ required: true, message: 'Please input the event name!' }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item name={'startTime'} label="Start Time">
+        <Form.Item name={'startTime'} label="Start Time" rules={[{ required: true, message: 'Please select the start time!' }]}>
           <TimePicker />
         </Form.Item>
         <Form.Item name={'endTime'} label="End Time">
