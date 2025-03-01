@@ -1,7 +1,8 @@
 import React from 'react';
 import { Drawer, Form, Input, Button } from 'antd';
+import VisitorForm from '../../visitors/VisitorForm';
 
-const AddFirstTimerDrawer = ({ isDrawerOpen, setIsDrawerOpen, handleDrawerSubmit, drawerForm }) => {
+const AddFirstTimerDrawer = ({ isDrawerOpen, setIsDrawerOpen, setIsModalOpen }) => {
   return (
     <Drawer
       title="Add First-timer"
@@ -9,34 +10,7 @@ const AddFirstTimerDrawer = ({ isDrawerOpen, setIsDrawerOpen, handleDrawerSubmit
       onClose={() => setIsDrawerOpen(false)}
       open={isDrawerOpen}
     >
-      <Form form={drawerForm} onFinish={handleDrawerSubmit} layout="vertical">
-        <Form.Item
-          name="name"
-          label="Name"
-          rules={[{ required: true, message: 'Please enter the name' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="email"
-          label="Email"
-          rules={[{ required: true, message: 'Please enter the email' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="contact"
-          label="Contact"
-          rules={[{ required: true, message: 'Please enter the contact' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" block>
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
+      <VisitorForm onClose={() => setIsDrawerOpen(false)} setIsModalOpen={setIsModalOpen} attendance={true} />
     </Drawer>
   );
 };

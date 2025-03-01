@@ -1,9 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { AutoComplete, Button, DatePicker, Form, Input, InputNumber, message } from 'antd';
-import { useData } from '../dataFactory';
-import { useRouter } from 'next/navigation';
+import { AutoComplete, Button, Form, Input, InputNumber, message } from 'antd';
 import { useStore } from '@/lib/contexts/storeContext';
 const layout = {
   labelCol: {
@@ -14,9 +12,8 @@ const layout = {
   },
 };
 
-const VisitorForm = ({onClose}) => {
-  const {addDocument, allIndividuals, formatAllIndividuals} = useStore()
-  const router = useRouter()
+const VisitorForm = ({onClose, setIsModalOpen, attendance}) => {
+  const {addDocument, formatAllIndividuals} = useStore()
   const [form] = Form.useForm()
   const [referrerOptions, setReferrerOptions] = useState([])
 
@@ -34,19 +31,19 @@ const VisitorForm = ({onClose}) => {
   const onFinish = (values) => {
     const newVisitor = {
       firstName: values.firstName,
-      lastName: values.lastName || ' ',
-      email: values.email || " ",
-      contact: values.contact || " ",
-      occupation: values.occupation || " ",
-      dob: values.dob || " ",
+      lastName: values.lastName || 'Unknown',
+      email: values.email || "Unknown",
+      contact: values.contact || "Unknown",
+      occupation: values.occupation || "Unknown",
+      dob: values.dob || "Unknown",
       age: values.age || 0,
-      residentialArea: values.residentialArea || " ",
-      notes: values.notes || " ",
+      residentialArea: values.residentialArea || "Unknown",
+      notes: values.notes || "Unknown",
     }
     addDocument('visitors', values)
-    router.push('/dashboard/visitors')
-    message.success('Visitor added successfully')
     form.resetFields()
+    onClose()
+    if (attendance) setIsModalOpen(true)
   };
 
   useEffect(() => {
@@ -58,7 +55,8 @@ const VisitorForm = ({onClose}) => {
     <div className='flex justify-center items-center h-full w-full'>
       <Form
       {...layout}
-      name="nest-messages"
+      form={form}
+      name="Add Visitor"
       onFinish={onFinish}
       style={{
         maxWidth: 600,

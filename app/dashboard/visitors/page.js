@@ -132,7 +132,7 @@ const Visitors = () => {
         onCancel={onClose}
         title="Add new visitor"
       >
-        <VisitorForm />
+        <VisitorForm onClose={onClose}/>
       </Modal>
       <style jsx>{`
         @media (max-width: 768px) {

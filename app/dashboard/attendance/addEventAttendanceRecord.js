@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react';
 import AddFirstTimerDrawer from './[...eventId]/AddFirstTimerDrawer';
 import AddAttendeesModal from './[...eventId]/AddAttendeesModal';
 import { useData } from '../dataFactory';
 
 const AddEventAttendanceRecord = ({ setIsModalOpen, form, attendeeOptions, isDrawerOpen, setIsDrawerOpen, drawerForm }) => {
   const { setAttendanceDatabase } = useData();
+  const [selectedAttendees, setSelectedAttendees] = useState([]);
 
   // Handle opening the modal to add attendees
   const handleAddAttendees = () => {
@@ -14,7 +15,7 @@ const AddEventAttendanceRecord = ({ setIsModalOpen, form, attendeeOptions, isDra
   // Handle closing the modal
   const handleModalCancel = () => {
     setIsModalOpen(false);
-    form.resetFields()
+    form.resetFields();
   };
 
   // Handle submitting the modal form
@@ -30,7 +31,7 @@ const AddEventAttendanceRecord = ({ setIsModalOpen, form, attendeeOptions, isDra
       return record;
     });
     setAttendanceDatabase(updatedAttendanceDatabase);
-    console.log(values)
+    setSelectedAttendees(values.attendees);
     setIsModalOpen(false);
     form.resetFields();
   };
@@ -47,10 +48,24 @@ const AddEventAttendanceRecord = ({ setIsModalOpen, form, attendeeOptions, isDra
 
   return (
     <>
-      <AddAttendeesModal isModalOpen handleModalCancel handleModalSubmit form attendeeOptions setIsDrawerOpen setIsModalOpen />
-      <AddFirstTimerDrawer isDrawerOpen setIsDrawerOpen handleDrawerSubmit drawerForm />
+      <AddAttendeesModal
+        isModalOpen={isModalOpen}
+        handleModalCancel={handleModalCancel}
+        handleModalSubmit={handleModalSubmit}
+        form={form}
+        attendeeOptions={attendeeOptions}
+        setIsDrawerOpen={setIsDrawerOpen}
+        setIsModalOpen={setIsModalOpen}
+        selectedAttendees={selectedAttendees}
+      />
+      <AddFirstTimerDrawer
+        isDrawerOpen={isDrawerOpen}
+        setIsDrawerOpen={setIsDrawerOpen}
+        handleDrawerSubmit={handleDrawerSubmit}
+        drawerForm={drawerForm}
+      />
     </>
-  )
-}
+  );
+};
 
-export default AddEventAttendanceRecord
+export default AddEventAttendanceRecord;

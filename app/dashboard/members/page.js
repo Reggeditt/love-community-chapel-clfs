@@ -215,6 +215,7 @@ const Members = () => {
 
   return (
     <>
+    {JSON.stringify(members)}
       <Table
         columns={columns}
         dataSource={tableData}

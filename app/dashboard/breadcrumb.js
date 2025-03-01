@@ -10,11 +10,12 @@ const BreadcrumbNav = () => {
 
   useEffect(() => {
     const currentPath = pathname.split('/')
-    const paths = currentPath.map((item, index) => {
+    const paths = currentPath?.map((item, index) => {
       const n = currentPath.slice(0, index)
       return {
         path: item,
-        href: `${n.join('/')}/${item}`
+        href: `${n.join('/')}/${item}`,
+        key: index
       }
     })
     setPathArray(paths)
@@ -23,20 +24,20 @@ const BreadcrumbNav = () => {
     <Breadcrumb>
       <BreadcrumbList>
         {pathArray?.map((path, index) => {
-          return index === (pathArray.length - 1) ?
+          return (index === (pathArray.length - 1) ?
             (<>
-              <BreadcrumbItem key={path.path}>
+              <BreadcrumbItem key={path.key}>
                 <BreadcrumbPage>{path.path}</BreadcrumbPage>
               </BreadcrumbItem>
             </>) : (
               <>
-                <BreadcrumbItem key={path.path} className="hidden md:block">
+                <BreadcrumbItem key={path.key} className="hidden md:block">
                   <Link href={path.href}>{path.path}
                   </Link>
                 </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />
               </>
-            )
+            ))
         })}
       </BreadcrumbList>
     </Breadcrumb>
