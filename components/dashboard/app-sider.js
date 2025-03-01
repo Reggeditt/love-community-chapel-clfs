@@ -32,6 +32,11 @@ const data = {
   ],
   navMain: [
     {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: SquareTerminal
+    },
+    {
       title: "Database",
       url: "#",
       icon: SquareTerminal,

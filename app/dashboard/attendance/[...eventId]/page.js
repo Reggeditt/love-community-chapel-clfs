@@ -11,10 +11,10 @@ import { useStore } from '@/lib/contexts/storeContext';
 
 const EventAttendanceDetails = () => {
   const pathSegments = usePathname().split('/');
-  const attendanceId = pathSegments[pathSegments.length - 1];
+  const attendanceId = pathSegments[pathSegments?.length - 1];
   const [form] = Form.useForm();
   const [drawerForm] = Form.useForm();
-  const { attendance, events, members, visitors, allIndividuals, addDocument, formatAllIndividuals } = useStore();
+  const { attendance, events, members, visitors, allIndividuals, updateDocument, formatAllIndividuals } = useStore();
   const [attendanceRecords, setAttendanceRecords] = useState([]);
   const [eventDetails, setEventDetails] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,7 +41,7 @@ const EventAttendanceDetails = () => {
     },
   ];
 
-  const totalAttendees = attendanceRecords.length;
+  const totalAttendees = attendanceRecords?.length || 0;
 
   // Handle opening the modal to add attendees
   const handleAddAttendees = () => {
@@ -56,9 +56,10 @@ const EventAttendanceDetails = () => {
 
   // Handle submitting the modal form
   const handleModalSubmit = (values) => {
-    const newAttendees = values.attendees.map(attendee => attendee.id);
-    addDocument('attendance', newAttendees
-    );
+    const newAttendees = attendanceRecords?.map(record => record?.value || null)
+    newAttendees.push(values.attendees)
+    console.log('attendanceRecords: ', attendanceRecords, 'values:', values, 'newAttendees:', newAttendees.flat());
+    updateDocument('attendance', attendanceId, {attendees: newAttendees.flat(), numberInAttendance: newAttendees.length})
     setIsModalOpen(false);
     form.resetFields();
   };
@@ -80,21 +81,26 @@ const EventAttendanceDetails = () => {
 
     if (attendanceId && allIndividuals) {
       const attendanceRecord = attendance?.find(record => record.id === attendanceId);
-      const event = events?.find(event => event.id === attendanceRecord.eventID);
-      const attendeesArray = attendanceRecord.attendees ? attendanceRecord.attendees.map(attendeeId => {
-        const attendee = allIndividuals?.find(individual => individual.value === attendeeId)
+      console.log('1. attendanceRecord:', attendanceRecord);
+      const event = events?.find(event => event.id === attendanceRecord?.eventID);
+      const attendeesArray = attendanceRecord?.attendees?.map(attendeeData => {
+        console.log('attendeeData:', attendeeData);
+        const attendee = allIndividuals?.find(individual => individual.value === attendeeData.id)
         return attendee
-      }) : [];
+      }) || [];
+      console.log('2. allIndividuals:', allIndividuals);
       setEventDetails(event);
+      console.log('3. attendeesArray:', attendeesArray);
       setAttendanceRecords(attendeesArray);
     };
   }, [attendance, events, members, visitors]);
 
   return (
     <div style={{ padding: '16px' }}>
+      {JSON.stringify(attendanceRecords)}
       <Divider />
       <Space className='px-4' size='middle'>
-        <Statistic title="Total Attendees" value={totalAttendees} />
+        <Statistic title="Total Attendees" value={attendanceRecords.length} />
         <Button type="primary" onClick={handleAddAttendees}>Add Attendees</Button>
       </Space>
       <Divider />
