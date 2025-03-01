@@ -8,7 +8,7 @@ import AddEventAttendanceRecord from './addEventAttendanceRecord';
 import AddNewAttendance from './NewAttendanceForm';
 
 const Attendance = () => {
-  const { attendance, events, eventCategories, allIndividuals } = useStore()
+  const { attendance, events, eventCategories } = useStore()
   const [filteredAttendanceList, setFilteredAttendanceList] = useState([]);
   const [attendanceList, setAttendanceList] = useState([]);
   const [selectedEventID, setSelectedEventID] = useState(null)
@@ -27,7 +27,6 @@ const Attendance = () => {
         eventCategory: category ? category.name : 'Unknown Category'
       };
     });
-    console.log('listWithEventDetails:', listWithEventDetails, 'attendance:', attendance);
     setAttendanceList(listWithEventDetails);
     setFilteredAttendanceList(listWithEventDetails);
   }, [attendance, events, eventCategories]);
