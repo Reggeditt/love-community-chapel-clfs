@@ -13,7 +13,6 @@ const EventAttendanceDetails = () => {
   const pathSegments = usePathname().split('/');
   const attendanceId = pathSegments[pathSegments?.length - 1];
   const [form] = Form.useForm();
-  const [drawerForm] = Form.useForm();
   const { attendance, events, members, visitors, allIndividuals, updateDocument, formatAllIndividuals } = useStore();
   const [attendanceRecords, setAttendanceRecords] = useState([]);
   const [eventDetails, setEventDetails] = useState(null);
@@ -56,7 +55,7 @@ const EventAttendanceDetails = () => {
 
   // Handle submitting the modal form
   const handleModalSubmit = (values) => {
-    const newAttendees = attendanceRecords?.map(record => record?.value || null)
+    const newAttendees = attendanceRecords?.map(record => ({id: record?.value} || null))
     newAttendees.push(values.attendees)
     console.log('attendanceRecords: ', attendanceRecords, 'values:', values, 'newAttendees:', newAttendees.flat());
     updateDocument('attendance', attendanceId, {attendees: newAttendees.flat(), numberInAttendance: newAttendees.length})
@@ -64,20 +63,9 @@ const EventAttendanceDetails = () => {
     form.resetFields();
   };
 
-  // Handle submitting the drawer form 
-  const handleDrawerSubmit = (values) => {
-    const newVisitor = { id: Date.now().toString(), ...values };
-    setVisitorsDatabase((prev) => [...prev, newVisitor]);
-    message.success('First-timer added successfully!');
-    drawerForm.resetFields();
-    setIsDrawerOpen(false);
-    setIsModalOpen(true);
-  };
-
   // Fetch data and set state when component mounts or dependencies change
   useEffect(() => {
-    formatAllIndividuals();
-    setAttendeeOptions(allIndividuals)
+    setAttendeeOptions(formatAllIndividuals())
 
     if (attendanceId && allIndividuals) {
       const attendanceRecord = attendance?.find(record => record.id === attendanceId);
@@ -97,7 +85,6 @@ const EventAttendanceDetails = () => {
 
   return (
     <div style={{ padding: '16px' }}>
-      {JSON.stringify(attendanceRecords)}
       <Divider />
       <Space className='px-4' size='middle'>
         <Statistic title="Total Attendees" value={attendanceRecords.length} />
@@ -117,8 +104,7 @@ const EventAttendanceDetails = () => {
       <AddFirstTimerDrawer
         isDrawerOpen={isDrawerOpen}
         setIsDrawerOpen={setIsDrawerOpen}
-        handleDrawerSubmit={handleDrawerSubmit}
-        drawerForm={drawerForm}
+        setIsModalOpen={setIsModalOpen}
       />
     </div>
   );
