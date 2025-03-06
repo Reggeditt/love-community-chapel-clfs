@@ -93,8 +93,6 @@ const eventsPage = () => {
 
   return (
     <div style={{ padding: '16px' }}>
-      {JSON.stringify(eventCategories)}
-      {JSON.stringify(events)}
       <Divider className='m-0' />
       <Space className='px-4' size='middle' style={{ marginBottom: '4px' }}>
         <Button onClick={() => setOpenEventCategoryModal(!openEventCategoryModal)}>Add Event Category</Button>

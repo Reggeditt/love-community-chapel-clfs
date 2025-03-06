@@ -26,7 +26,7 @@ export function Nav() {
             <Link href="#services" className="hover:text-primary">Services</Link>
             <Link href="#ministries-and-fellowships" className="hover:text-primary">Ministries & Fellowships</Link>
             <Link href="#events" className="hover:text-primary">Events</Link>
-            <Button><Link href={'/dashboard'}>Sign in</Link></Button>
+            <Button><Link href={'/login'}>Sign in</Link></Button>
           </div>
 
           <button 

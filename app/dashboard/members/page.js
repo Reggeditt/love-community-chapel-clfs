@@ -1,11 +1,12 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { Divider, Space, Table, Modal, Form, message } from 'antd';
+import { Divider, Table, Modal, Form, Space } from 'antd';
 import { FloatButton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useStore } from '@/lib/contexts/storeContext';
 import MemberForm from './MemberForm';
+import { Button } from '@/components/ui/button';
 
 const Members = () => {
   const [tableData, setTableData] = useState(null);
@@ -215,7 +216,11 @@ const Members = () => {
 
   return (
     <>
-    {JSON.stringify(members)}
+      <Divider className='m-0' />
+      <Space className='px-4' size='middle'>
+        <Button onClick={handleModalOpen}>Add New Member</Button>
+      </Space>
+      <Divider className='m-1' />
       <Table
         columns={columns}
         dataSource={tableData}

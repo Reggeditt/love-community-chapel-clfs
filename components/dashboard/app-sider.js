@@ -122,7 +122,7 @@ const data = {
         },
         {
           title: "Users/Team",
-          url: "dashboard/users",
+          url: "/dashboard/admin/users",
         },
       ],
     },

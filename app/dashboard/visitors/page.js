@@ -9,8 +9,8 @@ import { FloatButton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import dynamic from 'next/dynamic'
 import { useStore } from '@/lib/contexts/storeContext'
-// import VisitorForm from './VisitorForm'
-const VisitorForm = dynamic(() => import('./VisitorForm', { ssr: false, loading: () => <p>Loading...</p> }))
+
+const VisitorForm = dynamic(() => import('./VisitorForm'), { ssr: false, loading: () => <p>Loading...</p> })
 
 const Visitors = () => {
   const [tableData, setTableData] = useState(null)
@@ -113,11 +113,10 @@ const Visitors = () => {
 
   return (
     <>
-      <Divider />
       <Space className='px-4' size='middle'>
         <Button onClick={()=>setOpenModal(true)}>Add New Visitor</Button>
       </Space>
-      <Divider />
+      <Divider className='m-1'/>
       <Table columns={columns} dataSource={tableData} onChange={onChange} scroll={{ x: true }} />
       <FloatButton.Group 
         shape="circle" 
@@ -132,7 +131,7 @@ const Visitors = () => {
         onCancel={onClose}
         title="Add new visitor"
       >
-        <VisitorForm onClose={onClose}/>
+        {openModal && <VisitorForm onClose={onClose}/>}
       </Modal>
       <style jsx>{`
         @media (max-width: 768px) {
