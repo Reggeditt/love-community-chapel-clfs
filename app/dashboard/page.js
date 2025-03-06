@@ -1,9 +1,15 @@
+'use client'
+
 import { Card } from "@/components/ui/card"
+import { useAuth } from "@/lib/contexts/authContext"
+import { useStore } from "@/lib/contexts/storeContext"
 import { Users, FileText, AlertTriangle, MessageSquare } from "lucide-react"
 
 export default function Page() {
+  const { currentUser }=useStore()
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6">{JSON.stringify(currentUser) + 'is it working at all??'}
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Stat Cards */}
         <Card className="p-6 flex flex-col items-center justify-center">
