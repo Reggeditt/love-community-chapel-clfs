@@ -113,11 +113,10 @@ const Visitors = () => {
 
   return (
     <>
-      <Divider />
       <Space className='px-4' size='middle'>
         <Button onClick={()=>setOpenModal(true)}>Add New Visitor</Button>
       </Space>
-      <Divider />
+      <Divider className='m-1'/>
       <Table columns={columns} dataSource={tableData} onChange={onChange} scroll={{ x: true }} />
       <FloatButton.Group 
         shape="circle" 
