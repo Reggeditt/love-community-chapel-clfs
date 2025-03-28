@@ -1,12 +1,11 @@
 'use client'
 
 import { Card } from "@/components/ui/card"
-import { useAuth } from "@/lib/contexts/authContext"
 import { useStore } from "@/lib/contexts/storeContext"
 import { Users, FileText, AlertTriangle, MessageSquare } from "lucide-react"
 
 export default function Page() {
-  const { currentUser }=useStore()
+  const { members, visitors, users } = useStore()
   return (
     <div className="container mx-auto p-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -15,32 +14,32 @@ export default function Page() {
           <div className="w-16 h-16 bg-cyan-100 rounded-md flex items-center justify-center mb-3">
             <Users className="h-8 w-8 text-cyan-500" />
           </div>
-          <div className="text-4xl font-bold">9</div>
-          <div className="text-gray-500">Member</div>
+          <div className="text-4xl font-bold">{members?.length ?? 0}</div>
+          <div className="text-gray-500">Members</div>
         </Card>
 
         <Card className="p-6 flex flex-col items-center justify-center">
           <div className="w-16 h-16 bg-orange-50 rounded-md flex items-center justify-center mb-3">
             <FileText className="h-8 w-8 text-orange-400" />
           </div>
-          <div className="text-4xl font-bold">3</div>
-          <div className="text-gray-500">Accountant</div>
+          <div className="text-4xl font-bold">{visitors?.length ?? 0}</div>
+          <div className="text-gray-500">Visitors</div>
         </Card>
 
         <Card className="p-6 flex flex-col items-center justify-center">
           <div className="w-16 h-16 bg-amber-50 rounded-md flex items-center justify-center mb-3">
             <AlertTriangle className="h-8 w-8 text-amber-400" />
           </div>
-          <div className="text-4xl font-bold">5</div>
-          <div className="text-gray-500">Notice</div>
+          <div className="text-4xl font-bold">0</div>
+          <div className="text-gray-500">Birthdays</div>
         </Card>
 
         <Card className="p-6 flex flex-col items-center justify-center">
           <div className="w-16 h-16 bg-green-50 rounded-md flex items-center justify-center mb-3">
             <MessageSquare className="h-8 w-8 text-green-400" />
           </div>
-          <div className="text-4xl font-bold">4</div>
-          <div className="text-gray-500">Message</div>
+          <div className="text-4xl font-bold">12</div>
+          <div className="text-gray-500">Events</div>
         </Card>
       </div>
 
@@ -49,61 +48,32 @@ export default function Page() {
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4">Users</h2>
           <div className="flex justify-center">
-            <UserDonutChart />
-          </div>
-          <div className="grid grid-cols-3 gap-2 mt-6">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-teal-400 rounded"></div>
-              <span className="text-sm text-gray-600">Members</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-pink-400 rounded"></div>
-              <span className="text-sm text-gray-600">Accountant</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-gray-400 rounded"></div>
-              <span className="text-sm text-gray-600">Management</span>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-2 mt-4">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-amber-700 rounded"></div>
-              <span className="text-sm text-gray-600">Family Member</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-purple-300 rounded"></div>
-              <span className="text-sm text-gray-600">Volunteer Member</span>
-            </div>
+            <DynamicDonutChart
+              data={[
+                { label: "Admin", value: 2, color: "#4fd1c5" },
+                { label: "Data Entry", value: 2, color: "#ed64a6" },
+                // { label: "Management", value: 0, color: "#a0aec0" },
+                // { label: "Family Member", value: 10, color: "#b7791f" },
+                // { label: "Volunteer Member", value: 15, color: "#d6bcfa" },
+              ]}
+              total={users?.length}
+              centerLabel="Users"
+            />
           </div>
         </Card>
 
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4">Payment</h2>
           <div className="flex justify-center">
-            <PaymentDonutChart />
-          </div>
-          <div className="grid grid-cols-3 gap-2 mt-6">
-            <div className="text-center">
-              <div className="flex items-center gap-2 justify-center">
-                <div className="w-4 h-4 bg-blue-300 rounded"></div>
-                <span className="text-sm text-gray-600">Income</span>
-              </div>
-              <div className="text-xl font-bold">$ 35542</div>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center gap-2 justify-center">
-                <div className="w-4 h-4 bg-pink-200 rounded"></div>
-                <span className="text-sm text-gray-600">Expense</span>
-              </div>
-              <div className="text-xl font-bold">$ 15732</div>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center gap-2 justify-center">
-                <div className="w-4 h-4 bg-green-400 rounded"></div>
-                <span className="text-sm text-gray-600">Net Profit</span>
-              </div>
-              <div className="text-xl font-bold">$ 19810</div>
-            </div>
+            <DynamicDonutChart
+              data={[
+                { label: "Income", value: 60, color: "#90cdf4" },
+                // { label: "Net Profit", value: 30, color: "#68d391" },
+                { label: "Expense", value: 40, color: "#fbb6ce" },
+              ]}
+              total={100}
+              centerLabel="Payment"
+            />
           </div>
         </Card>
       </div>
@@ -111,125 +81,46 @@ export default function Page() {
   )
 }
 
-function UserDonutChart() {
-  return (
-    <div className="relative w-48 h-48">
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        <circle cx="50" cy="50" r="40" fill="none" stroke="#e2e8f0" strokeWidth="20" />
-        {/* Teal segment - Members */}
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="none"
-          stroke="#4fd1c5"
-          strokeWidth="20"
-          strokeDasharray="251.2"
-          strokeDashoffset="188.4"
-          transform="rotate(-90 50 50)"
-        />
-        {/* Pink segment - Accountant */}
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="none"
-          stroke="#ed64a6"
-          strokeWidth="20"
-          strokeDasharray="251.2"
-          strokeDashoffset="213.52"
-          transform="rotate(0 50 50)"
-        />
-        {/* Gray segment - Management */}
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="none"
-          stroke="#a0aec0"
-          strokeWidth="20"
-          strokeDasharray="251.2"
-          strokeDashoffset="225.6"
-          transform="rotate(30 50 50)"
-        />
-        {/* Brown segment - Family Member */}
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="none"
-          stroke="#b7791f"
-          strokeWidth="20"
-          strokeDasharray="251.2"
-          strokeDashoffset="188.4"
-          transform="rotate(60 50 50)"
-        />
-        {/* Purple segment - Volunteer Member */}
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="none"
-          stroke="#d6bcfa"
-          strokeWidth="20"
-          strokeDasharray="251.2"
-          strokeDashoffset="225.6"
-          transform="rotate(150 50 50)"
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="text-4xl font-bold">21</div>
-        <div className="text-gray-500">Users</div>
-      </div>
-    </div>
-  )
-}
+function DynamicDonutChart({ data, total, centerLabel }) {
+  const circumference = 251.2
+  let offset = 0
 
-function PaymentDonutChart() {
   return (
     <div className="relative w-48 h-48">
       <svg viewBox="0 0 100 100" className="w-full h-full">
         <circle cx="50" cy="50" r="40" fill="none" stroke="#e2e8f0" strokeWidth="20" />
-        {/* Blue segment - Income */}
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="none"
-          stroke="#90cdf4"
-          strokeWidth="20"
-          strokeDasharray="251.2"
-          strokeDashoffset="125.6"
-          transform="rotate(-90 50 50)"
-        />
-        {/* Green segment - Net Profit */}
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="none"
-          stroke="#68d391"
-          strokeWidth="20"
-          strokeDasharray="251.2"
-          strokeDashoffset="188.4"
-          transform="rotate(30 50 50)"
-        />
-        {/* Pink segment - Expense */}
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="none"
-          stroke="#fbb6ce"
-          strokeWidth="20"
-          strokeDasharray="251.2"
-          strokeDashoffset="213.52"
-          transform="rotate(150 50 50)"
-        />
+        {data.map((segment, index) => {
+          const dashArray = (segment.value / total) * circumference
+          const dashOffset = circumference - offset - dashArray
+          offset += dashArray
+          console.log(segment)
+          return (
+            <circle
+              key={index+1}
+              cx="50"
+              cy="50"
+              r="40"
+              fill="none"
+              stroke={segment.color}
+              strokeWidth="20"
+              strokeDasharray={circumference}
+              strokeDashoffset={dashOffset}
+              transform={`rotate(${index * 30 - 90} 50 50)`}
+            />
+          )
+        })}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="text-4xl font-bold">$ 19810</div>
-        <div className="text-gray-500">Payment</div>
+        <div className="text-4xl font-bold">{total}</div>
+        <div className="text-gray-500">{centerLabel}</div>
+      </div>
+      <div className="grid grid-cols-2 gap-2 mt-6 w-full">
+        {data.map((segment, index) => (
+          <div key={index} className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded" style={{ backgroundColor: segment.color }}></div>
+            <span className="text-sm text-gray-600">{segment.label}</span>
+          </div>
+        ))}
       </div>
     </div>
   )

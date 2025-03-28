@@ -16,12 +16,13 @@ import { auth } from "@/lib/firebase"
 import { redirect } from "next/navigation"
 import { useAuth } from "@/lib/contexts/authContext"
 import { Avatar } from "antd"
+import ProfileAvatar from "@/components/header"
 
 
 const layout = ({ children }) => {
-  const {user} = useAuth();
-  useEffect(()=>{
-    if(!auth.currentUser) redirect('/login')
+  const { user } = useAuth();
+  useEffect(() => {
+    if (!auth.currentUser) redirect('/login')
   }, [auth.currentUser])
   return (
     <DataProvider>
@@ -35,12 +36,7 @@ const layout = ({ children }) => {
                 <Separator orientation="vertical" className="mr-2 h-4" />
                 <BreadcrumbNav />
               </div>
-              <Avatar 
-                src={
-                  user?.photoURL || user?.displayName?.split(' ').map((name)=>name[0]).join('') || user?.email[0] || 'User'
-                }
-                className="mr-4"
-              />
+              <ProfileAvatar />
             </header>
             <AntdRegistry>{children}</AntdRegistry>
           </SidebarInset>

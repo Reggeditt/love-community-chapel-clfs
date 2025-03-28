@@ -1,36 +1,17 @@
 "use client"
 
 import * as React from "react"
-import { AudioWaveform, BookOpen, Bot, Command, Frame, GalleryVerticalEnd, Map, PieChart, Settings2, SquareTerminal } from "lucide-react"
+import { AudioWaveform, Bot, Command, GalleryVerticalEnd, Settings2, SquareTerminal } from "lucide-react"
 import { NavMain } from "@/components/dashboard/nav-main"
 import { NavUser } from "@/components/dashboard/nav-user"
 import { TeamSwitcher } from "@/components/dashboard/team-switcher"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar"
+import { useStore } from "@/lib/contexts/storeContext"
 
-const data = {
-  user: {
-    name: "CanaanLand Faith Sanctuary",
-    email: "Cananlandfaithsanctuary@gmail.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Canaan Land Faith Sanctuary",
-      logo: GalleryVerticalEnd,
-      plan: "Maura",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-  navMain: [
+export function AppSidebar({ ...props }) {
+  const { currentUser } = useStore()
+
+  const adminNavItems = [
     {
       title: "Dashboard",
       url: "/dashboard",
@@ -50,10 +31,6 @@ const data = {
           title: "Visitors",
           url: "/dashboard/visitors",
         },
-        // {
-        //   title: "Children",
-        //   url: "/dashboard/children",
-        // },
         {
           title: "Attendance",
           url: "/dashboard/attendance",
@@ -126,10 +103,62 @@ const data = {
         },
       ],
     },
-  ],
-}
+  ]
 
-export function AppSidebar({ ...props }) {
+  const dataEntryNavItems = [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: SquareTerminal
+    },
+    {
+      title: "Database",
+      url: "#",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: "Members",
+          url: "/dashboard/members",
+        },
+        {
+          title: "Visitors",
+          url: "/dashboard/visitors",
+        },
+        {
+          title: "Attendance",
+          url: "/dashboard/attendance",
+        },
+      ],
+    },
+  ]
+
+  const data = {
+    user: {
+      name: "CanaanLand Faith Sanctuary",
+      email: "Cananlandfaithsanctuary@gmail.com",
+      avatar: "/avatars/shadcn.jpg",
+    },
+    teams: [
+      {
+        name: "Canaan Land Faith Sanctuary",
+        logo: GalleryVerticalEnd,
+        plan: "Maura",
+      },
+      {
+        name: "Acme Corp.",
+        logo: AudioWaveform,
+        plan: "Startup",
+      },
+      {
+        name: "Evil Corp.",
+        logo: Command,
+        plan: "Free",
+      },
+    ],
+    navMain: currentUser?.role === 'admin' ? adminNavItems : dataEntryNavItems,
+  }
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
