@@ -55,7 +55,7 @@ const ProfileAvatar = () => {
 
       <Modal
         title="Account"
-        visible={isAccountModalVisible}
+        open={isAccountModalVisible}
         onCancel={() => setIsAccountModalVisible(false)}
         footer={[
           <Button key="close" onClick={() => setIsAccountModalVisible(false)}>
@@ -68,7 +68,7 @@ const ProfileAvatar = () => {
 
       <Modal
         title="Preferences"
-        visible={isPreferencesModalVisible}
+        open={isPreferencesModalVisible}
         onCancel={() => setIsPreferencesModalVisible(false)}
         footer={[
           <Button key="close" onClick={() => setIsPreferencesModalVisible(false)}>
@@ -81,7 +81,7 @@ const ProfileAvatar = () => {
 
       <Modal
         title="Logout"
-        visible={isLogoutModalVisible}
+        open={isLogoutModalVisible}
         onCancel={() => setIsLogoutModalVisible(false)}
         footer={[
           <Button key="cancel" onClick={() => setIsLogoutModalVisible(false)}>
