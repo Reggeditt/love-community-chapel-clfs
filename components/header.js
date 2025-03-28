@@ -47,7 +47,7 @@ const ProfileAvatar = () => {
       <Dropdown overlay={menu} trigger={['click']}>
         <Avatar 
                         src={
-                          user?.photoURL || user?.displayName?.split(' ').map((name)=>name[0]).join('') || user?.email[0] || 'User'
+                          user?.photoURL ?? (user?.displayName?.split(' ').map((name)=>name[0]).join('')) ?? (user?.email[0]) ?? 'U'
                         }
                         className="mr-4"
                       />
