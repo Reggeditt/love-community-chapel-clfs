@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useStore } from '@/lib/contexts/storeContext';
+import { useStore } from '@/hooks/contexts/storeContext';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const {currentUser} = useStore();

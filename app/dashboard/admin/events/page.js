@@ -6,7 +6,7 @@ import { Button, Divider, Form, Modal, Space, DatePicker, Select, Input, AutoCom
 import dynamic from 'next/dynamic';
 import { FloatButton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { useStore } from '@/lib/contexts/storeContext';
+import { useStore } from '@/hooks/contexts/storeContext';
 
 const AddEventCategory = dynamic(() => import('./addEventCategory'), { loading: () => <p>Loading...</p> });
 const AddEvent = dynamic(() => import('./addEvent'), { loading: () => <p>loading...</p> });

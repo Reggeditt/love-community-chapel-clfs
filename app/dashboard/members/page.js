@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Divider, Table, Modal, Form, Space } from 'antd';
 import { FloatButton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { useStore } from '@/lib/contexts/storeContext';
+import { useStore } from '@/hooks/contexts/storeContext';
 import MemberForm from './MemberForm';
 import { Button } from '@/components/ui/button';
 

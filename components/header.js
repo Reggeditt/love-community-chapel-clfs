@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Dropdown, Menu, Modal, Button } from 'antd';
 import { UserOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
-import { useAuth } from '@/lib/contexts/authContext';
+import { useAuth } from '@/hooks/contexts/authContext';
 import { Avatar } from 'antd';
 
 const ProfileAvatar = () => {
@@ -43,14 +43,11 @@ const ProfileAvatar = () => {
 
   return (
     <div className="header-container">
-      {/* ...existing code... */}
-      <Dropdown overlay={menu} trigger={['click']}>
-        <Avatar 
-                        src={
-                          user?.photoURL ?? (user?.displayName?.split(' ').map((name)=>name[0]).join('')) ?? (user?.email[0]) ?? 'U'
-                        }
-                        className="mr-4"
-                      />
+      <Dropdown menu={menu} trigger={['click']}>
+        <Avatar
+          src={'picsumphoto.com/200'}
+          className="mr-4 cursor-pointer"
+        />
       </Dropdown>
 
       <Modal

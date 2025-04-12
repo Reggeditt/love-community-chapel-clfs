@@ -1,6 +1,6 @@
 import { Form, Select, Input, TimePicker, Button } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useStore } from '../../../../lib/contexts/storeContext';
+import { useStore } from '../../../../hooks/contexts/storeContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../../lib/firebase';
 import moment from 'moment';

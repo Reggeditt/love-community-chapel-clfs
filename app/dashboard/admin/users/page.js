@@ -8,7 +8,7 @@ const AddNewUser = dynamic(() => import('./NewUserForm'), {ssr: false, loading: 
 const EditUserInfo = dynamic(() => import('./EditUserInfo'), {ssr: false, loading: () => <p>Loading...</p> });
 import { FloatButton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { useStore } from '@/lib/contexts/storeContext';
+import { useStore } from '@/hooks/contexts/storeContext';
 
 const UsersPanel = () => {
   const { users, deleteDocument } = useStore();

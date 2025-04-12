@@ -1,7 +1,7 @@
 'use client'
 
 import { Card } from "@/components/ui/card"
-import { useStore } from "@/lib/contexts/storeContext"
+import { useStore } from "@/hooks/contexts/storeContext"
 import { Users, FileText, AlertTriangle, MessageSquare } from "lucide-react"
 
 export default function Page() {

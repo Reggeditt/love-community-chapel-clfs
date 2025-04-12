@@ -5,7 +5,7 @@ import {
   db, membersCollection, visitorsCollection, childrenCollection, staffCollection, youthCollection, menCollection, womenCollection,
   eventsCollection, eventCategoriesCollection, groupsCollection, groupCategoriesCollection, financialCollection, attendanceCollection, assetsCollection, communicationsCollection, usersCollection,
   auth
-} from '../firebase';
+} from '../../lib/firebase';
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
 import { message } from 'antd';
 import { useAuth } from './authContext';

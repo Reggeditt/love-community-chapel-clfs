@@ -1,6 +1,6 @@
 import React from 'react';
 import { Drawer, Form, Input, Button } from 'antd';
-import VisitorForm from '../../visitors/VisitorForm';
+import VisitorForm from '../visitors/VisitorForm';
 
 const AddFirstTimerDrawer = ({ isDrawerOpen, setIsDrawerOpen, setIsModalOpen }) => {
   return (

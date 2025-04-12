@@ -4,8 +4,9 @@ import { message } from "antd";
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { addDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
-import { auth, usersCollection } from "../firebase";
+import { auth, usersCollection } from "../../lib/firebase";
 import { redirect, useRouter } from "next/navigation";
+import { Appconfig } from "@/app.config";
 
 const AuthContext = createContext();
 
@@ -105,7 +106,7 @@ export const AuthProvider = ({ children }) => {
     signOut(auth).then(() => {
       setUser(null);
       message.success('User signed out successfully');
-      router.push('/login');
+      router.push(Appconfig.routes.index);
     }).catch((error) => {
       message.error(error.message);
     });

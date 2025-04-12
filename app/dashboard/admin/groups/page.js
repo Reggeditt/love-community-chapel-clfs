@@ -9,7 +9,7 @@ const AddGroup = dynamic(() => import('./addGroup'), { loading: () => <p>Loading
 import { FloatButton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import EditGroup from './editGroup';
-import { useStore } from '@/lib/contexts/storeContext';
+import { useStore } from '@/hooks/contexts/storeContext';
 
 const GroupsPage = () => {
   const { groups, groupCategories, setGroups, deleteDocument } = useStore();

@@ -4,10 +4,10 @@ import React, { useEffect, useState } from 'react';
 import { Button, Divider, Space, Statistic, Form, message } from 'antd';
 import { useData } from '../../dataFactory';
 import { usePathname } from 'next/navigation';
-import AttendeesTable from './AttendeesTable';
-import AddAttendeesModal from './AddAttendeesModal';
-import AddFirstTimerDrawer from './AddFirstTimerDrawer';
-import { useStore } from '@/lib/contexts/storeContext';
+import AttendeesTable from '../AttendeesTable';
+import AddAttendeesModal from '../AddAttendeesModal';
+import AddFirstTimerDrawer from '../AddFirstTimerDrawer';
+import { useStore } from '@/hooks/contexts/storeContext';
 
 const EventAttendanceDetails = () => {
   const pathSegments = usePathname().split('/');

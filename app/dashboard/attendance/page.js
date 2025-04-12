@@ -3,9 +3,10 @@
 import { Button, Divider, List, Space, Form, DatePicker, Select, Input, Modal } from 'antd';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { useStore } from '@/lib/contexts/storeContext';
+import { useStore } from '@/hooks/contexts/storeContext';
 import AddEventAttendanceRecord from './addEventAttendanceRecord';
 import AddNewAttendance from './NewAttendanceForm';
+import { Appconfig } from '@/app.config';
 
 const Attendance = () => {
   const { attendance, events, eventCategories } = useStore()
@@ -15,7 +16,7 @@ const Attendance = () => {
   const [openAddRecordModal, setOpenAddRecordModal] = useState(false)
   const [openAddAttendanceModal, setOpenAddAttendanceModal] = useState(false)
   const onClose = () => setOpenAddAttendanceModal(false)
-  
+
   useEffect(() => {
     const listWithEventDetails = attendance?.map(record => {
       const event = events?.find(event => event.id === record.eventID);
@@ -73,7 +74,7 @@ const Attendance = () => {
           <Form.Item>
             <Button type="primary" htmlType="submit">Filter</Button>
           </Form.Item>
-          <Button style={{ marginLeft: 0 }} onClick={()=>setOpenAddAttendanceModal(true)}>Add New Attendance</Button>
+          <Button style={{ marginLeft: 0 }} onClick={() => setOpenAddAttendanceModal(true)}>Add New Attendance</Button>
         </Form>
       </div>
       <Divider className='m-1' />
@@ -87,8 +88,16 @@ const Attendance = () => {
                 <Button key="add" onClick={() => {
                   setSelectedEventID(item.id)
                   setOpenAddRecordModal(true)
-                }}>Add Records</Button>,
-                <Button key="view"><Link href={`/dashboard/attendance/${item.id}`}>View Attendance Details</Link></Button>
+                }}>
+                  <Link href={`${Appconfig.routes.dashboard.attendance.record}${item.id}`}>
+                    Add Records
+                  </Link>
+                </Button>,
+                <Button key="view">
+                  <Link href={`${Appconfig.routes.dashboard.attendance.record}${item.id}`}>
+                    View Attendance Details
+                  </Link>
+                </Button>
               ]}
             >
               <List.Item.Meta

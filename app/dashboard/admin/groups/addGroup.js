@@ -1,6 +1,6 @@
 import { Form, Input, Button, Select } from 'antd';
 import React from 'react';
-import { useStore } from '../../../../lib/contexts/storeContext';
+import { useStore } from '../../../../hooks/contexts/storeContext';
 
 const AddGroup = ({setOpenGroupModal}) => {
   const { addDocument, groupCategories, groupsCollection } = useStore();

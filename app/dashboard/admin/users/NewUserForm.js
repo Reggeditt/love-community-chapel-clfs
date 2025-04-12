@@ -1,7 +1,7 @@
 import { Form, Input, Button, Select } from 'antd';
 import React from 'react';
-import { useStore } from '../../../../lib/contexts/storeContext';
-import { useAuth } from '@/lib/contexts/authContext';
+import { useStore } from '../../../../hooks/contexts/storeContext';
+import { useAuth } from '@/hooks/contexts/authContext';
 
 const AddNewUser = ({setOpenUserModal}) => {
   const { allIndividuals } = useStore();

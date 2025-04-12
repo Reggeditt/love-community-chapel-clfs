@@ -1,6 +1,6 @@
 import { Form, Input, Button, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useStore } from '../../../../lib/contexts/storeContext';
+import { useStore } from '../../../../hooks/contexts/storeContext';
 
 const EditGroup = ({ groupData }) => {
   const { updateDocument, groupsCollection, groupCategories } = useStore();

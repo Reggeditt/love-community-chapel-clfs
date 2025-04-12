@@ -1,7 +1,7 @@
 import { Button, Form, Input, message } from 'antd'
 import { PlusIcon } from 'lucide-react'
 import React from 'react'
-import { useStore } from '@/lib/contexts/storeContext';
+import { useStore } from '@/hooks/contexts/storeContext';
 
 const AddEventCategory = ({setOpenEventCategoryModal}) => {
   const [form] = Form.useForm()

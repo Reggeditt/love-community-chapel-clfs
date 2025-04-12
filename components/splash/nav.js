@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Appconfig } from '@/app.config'
 
 export function Nav() {
   const [isOpen, setIsOpen] = useState(false)
@@ -17,7 +18,7 @@ export function Nav() {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-2xl font-bold">
+          <Link href={Appconfig.routes.index} className="text-2xl font-bold">
             LCC
           </Link>
 
@@ -26,7 +27,7 @@ export function Nav() {
             <Link href="#services" className="hover:text-primary">Services</Link>
             <Link href="#ministries-and-fellowships" className="hover:text-primary">Ministries & Fellowships</Link>
             <Link href="#events" className="hover:text-primary">Events</Link>
-            <Button><Link href={'/login'}>Sign in</Link></Button>
+            <Button><Link href={Appconfig.routes.login}>Sign in</Link></Button>
           </div>
 
           <button 
@@ -60,7 +61,7 @@ export function Nav() {
               Events
             </Link>
             <div className="px-3 py-2">
-              <Button className="w-full"><Link href={'/dashboard'}>Sign in</Link></Button>
+              <Button className="w-full"><Link href={Appconfig.routes.login}>Sign in</Link></Button>
             </div>
           </div>
         </motion.div>

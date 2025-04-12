@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import AddFirstTimerDrawer from './[...eventId]/AddFirstTimerDrawer';
-import AddAttendeesModal from './[...eventId]/AddAttendeesModal';
+import AddFirstTimerDrawer from './AddFirstTimerDrawer';
+import AddAttendeesModal from './AddAttendeesModal';
 import { useData } from '../dataFactory';
 
 const AddEventAttendanceRecord = ({ setIsModalOpen, form, attendeeOptions, isDrawerOpen, setIsDrawerOpen, drawerForm }) => {

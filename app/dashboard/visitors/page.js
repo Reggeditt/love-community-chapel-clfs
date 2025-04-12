@@ -8,7 +8,7 @@ import { Divider, Space, Table, message, Tag, Modal } from 'antd';
 import { FloatButton } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import dynamic from 'next/dynamic'
-import { useStore } from '@/lib/contexts/storeContext'
+import { useStore } from '@/hooks/contexts/storeContext'
 
 const VisitorForm = dynamic(() => import('./VisitorForm'), { ssr: false, loading: () => <p>Loading...</p> })
 

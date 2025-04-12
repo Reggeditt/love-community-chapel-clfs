@@ -6,7 +6,7 @@ import { NavMain } from "@/components/dashboard/nav-main"
 import { NavUser } from "@/components/dashboard/nav-user"
 import { TeamSwitcher } from "@/components/dashboard/team-switcher"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar"
-import { useStore } from "@/lib/contexts/storeContext"
+import { useStore } from "@/hooks/contexts/storeContext"
 
 export function AppSidebar({ ...props }) {
   const { currentUser } = useStore()
