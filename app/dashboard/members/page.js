@@ -13,6 +13,7 @@ const Members = () => {
   const { members } = useStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const [editingMember, setEditingMember] = useState(null); // Track the member being edited
 
   const columns = [
     {
@@ -179,22 +180,21 @@ const Members = () => {
       sorter: (a, b) => a.age - b.age,
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      filters: [
-        {
-          text: 'London',
-          value: 'London',
-        },
-        {
-          text: 'New York',
-          value: 'New York',
-        },
-      ],
-      onFilter: (value, record) => record.address.startsWith(value),
-      filterSearch: true,
-      width: '40%',
-    }
+      title: 'Action',
+      dataIndex: 'action',
+      render: (_, record) => (
+        <Button
+          type="link"
+          onClick={() => {
+            setEditingMember(record);
+            setIsModalOpen(true);
+            form.setFieldsValue(record); // Populate form with member data
+          }}
+        >
+          Edit
+        </Button>
+      ),
+    },
   ];
 
   const onChange = (pagination, filters, sorter, extra) => {
@@ -211,6 +211,7 @@ const Members = () => {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
+    setEditingMember(null); // Clear editing member
     form.resetFields();
   };
 
@@ -236,7 +237,7 @@ const Members = () => {
         <FloatButton icon={<PlusOutlined />} tooltip="Add New Member" onClick={handleModalOpen} />
       </FloatButton.Group>
       <Modal
-        title="Add New Member"
+        title={editingMember ? "Edit Member" : "Add New Member"}
         open={isModalOpen}
         onCancel={handleModalClose}
         footer={null}

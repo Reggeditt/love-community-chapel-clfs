@@ -89,9 +89,9 @@ const Attendance = () => {
                   setSelectedEventID(item.id)
                   setOpenAddRecordModal(true)
                 }}>
-                  <Link href={`${Appconfig.routes.dashboard.attendance.record}${item.id}`}>
+                  {/* <Link href={`${Appconfig.routes.dashboard.attendance.record}${item.id}`}> */}
                     Add Records
-                  </Link>
+                  {/* </Link> */}
                 </Button>,
                 <Button key="view">
                   <Link href={`${Appconfig.routes.dashboard.attendance.record}${item.id}`}>

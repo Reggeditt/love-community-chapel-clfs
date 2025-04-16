@@ -1,11 +1,22 @@
 'use client'
 
+import {useEffect} from 'react'
 import { Card } from "@/components/ui/card"
 import { useStore } from "@/hooks/contexts/storeContext"
 import { Users, FileText, AlertTriangle, MessageSquare } from "lucide-react"
+import { Appconfig } from '@/app.config'
+import { useRouter, redirect } from 'next/navigation'
 
 export default function Page() {
-  const { members, visitors, users } = useStore()
+  const router = useRouter();
+  const { members, visitors, users, currentUser } = useStore()
+
+  useEffect(() => {
+    if (currentUser?.role !=='admin'){
+      redirect(Appconfig.routes.dashboard.members.index)
+    }
+  }, [currentUser])
+  
   return (
     <div className="container mx-auto p-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">

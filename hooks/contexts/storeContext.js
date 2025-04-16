@@ -65,14 +65,6 @@ export const StoreProvider = ({ children }) => {
     !attendance.length && fetchData(attendanceCollection, setAttendance);
     !members.length && fetchData(membersCollection, setMembers);
     !visitors.length && fetchData(visitorsCollection, setVisitors);
-    // fetchData(childrenCollection, setChildren);
-    // fetchData(staffCollection, setStaff);
-    // fetchData(youthCollection, setYouth);
-    // fetchData(menCollection, setMen);
-    // fetchData(womenCollection, setWomen);
-    // fetchData(financialCollection, setFinancial);
-    // fetchData(assetsCollection, setAssets);
-    // fetchData(communicationsCollection, setCommunications);
     !users.length && fetchData(usersCollection, setUsers);
     formatAllIndividuals()
   }, [members, visitors, user]);

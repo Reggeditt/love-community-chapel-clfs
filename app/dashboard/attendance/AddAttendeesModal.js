@@ -8,6 +8,8 @@ const AddAttendeesModal = ({ isModalOpen, handleModalCancel, handleModalSubmit, 
       title="Add Attendees"
       open={isModalOpen}
       onCancel={handleModalCancel}
+      onClose={handleModalCancel}
+      onOk={handleModalSubmit}
       footer={null}
     >
       <Form form={form} onFinish={handleModalSubmit}>

@@ -3,7 +3,7 @@ import AddFirstTimerDrawer from './AddFirstTimerDrawer';
 import AddAttendeesModal from './AddAttendeesModal';
 import { useData } from '../dataFactory';
 
-const AddEventAttendanceRecord = ({ setIsModalOpen, form, attendeeOptions, isDrawerOpen, setIsDrawerOpen, drawerForm }) => {
+const AddEventAttendanceRecord = ({ setIsModalOpen, isModalOpen, form, attendeeOptions, isDrawerOpen, setIsDrawerOpen, drawerForm }) => {
   const { setAttendanceDatabase } = useData();
   const [selectedAttendees, setSelectedAttendees] = useState([]);
 

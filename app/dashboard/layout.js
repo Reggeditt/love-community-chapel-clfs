@@ -17,13 +17,15 @@ import { redirect } from "next/navigation"
 import { useAuth } from "@/hooks/contexts/authContext"
 import { Avatar } from "antd"
 import ProfileAvatar from "@/components/header"
+import { Appconfig } from "@/app.config"
 
 
 const layout = ({ children }) => {
-  // const { user } = useAuth();
-  // useEffect(() => {
-  //   if (!auth.currentUser) redirect('/login')
-  // }, [auth.currentUser])
+  const { user } = useAuth();
+  useEffect(() => {
+    if (!auth.currentUser) redirect(Appconfig.routes.index)
+  }, [auth.currentUser])
+
   return (
     <DataProvider>
       <StoreProvider>
